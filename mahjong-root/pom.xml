@@ -5,7 +5,7 @@
   <groupId>cn.mahjong</groupId>
   <artifactId>mahjong-root</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
+  <packaging>pom</packaging>
 
   <name>mahjong-root</name>
   <url>http://maven.apache.org</url>
