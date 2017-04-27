@@ -14,4 +14,11 @@
   <build>
     <finalName>mahjong-web</finalName>
   </build>
+  <dependencies>
+  	<dependency>
+  		<groupId>cn.mahjong</groupId>
+    	<artifactId>mahjong-core</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  </dependencies>
 </project>
