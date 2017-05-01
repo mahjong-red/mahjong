@@ -11,8 +11,11 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.Type;
 
+import cn.mahjong.enums.persist.Sex;
 import cn.mahjong.model.News;
 
 @Entity
@@ -33,9 +36,18 @@ public class NewsImpl implements News {
 	@Column(name = "content")
 	private String content;
 	
+	@Column(name = "sex", nullable = false, length = 1)
+	@Type(type="cn.mahjong.enums.persist.PersistEnumType",
+    parameters={@Parameter(name="enumClass",value="cn.mahjong.enums.persist.Sex")})
+	private Sex sex;
+	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "create_time", nullable = true)
 	private Date createTime;
+
+	public NewsImpl() {
+		super();
+	}
 
 	public Long getId() {
 		return id;
@@ -77,21 +89,27 @@ public class NewsImpl implements News {
 		this.createTime = createTime;
 	}
 
-	public NewsImpl(Long id , String author, String title, String content, Date createTime) {
-		this.id = id;
-		this.author = author;
-		this.title = title;
-		this.content = content;
-		this.createTime = createTime;
+	public Sex getSex() {
+		return sex;
 	}
 
-	public NewsImpl() {
-		super();
+	public void setSex(Sex sex) {
+		this.sex = sex;
 	}
 
 	@Override
 	public String toString() {
-		return "NewsImpl [id=" + id + ", author=" + author + ", title=" + title + ", content=" + content + ", createTime=" + createTime + "]";
+		return "NewsImpl [id=" + id + ", author=" + author + ", title=" + title + ", content=" + content + ", sex=" + sex.getDescription() + ", createTime=" + createTime + "]";
+	}
+
+	public NewsImpl(Long id, String author, String title, String content, Sex sex, Date createTime) {
+		super();
+		this.id = id;
+		this.author = author;
+		this.title = title;
+		this.content = content;
+		this.sex = sex;
+		this.createTime = createTime;
 	}
 	
 }

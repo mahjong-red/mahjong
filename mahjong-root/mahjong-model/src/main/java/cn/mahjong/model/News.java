@@ -2,6 +2,8 @@ package cn.mahjong.model;
 
 import java.util.Date;
 
+import cn.mahjong.enums.persist.Sex;
+
 public interface News {
 
 	public Long getId();
@@ -24,4 +26,7 @@ public interface News {
 
 	public void setCreateTime(Date createTime);
 
+	public Sex getSex();
+
+	public void setSex(Sex sex);
 }
