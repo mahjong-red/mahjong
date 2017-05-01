@@ -10,4 +10,22 @@
   <artifactId>mahjong-core</artifactId>
   <name>mahjong-core</name>
   <url>http://maven.apache.org</url>
+  
+  <dependencies>
+  	<dependency>
+  		<groupId>cn.mahjong</groupId>
+    	<artifactId>mahjong-model</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>cn.mahjong</groupId>
+    	<artifactId>mahjong-persist</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>cn.mahjong</groupId>
+    	<artifactId>mahjong-utils</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  </dependencies>
 </project>

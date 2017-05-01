@@ -17,7 +17,22 @@
   <dependencies>
   	<dependency>
   		<groupId>cn.mahjong</groupId>
+    	<artifactId>mahjong-model</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>cn.mahjong</groupId>
+    	<artifactId>mahjong-persist</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>cn.mahjong</groupId>
     	<artifactId>mahjong-core</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>cn.mahjong</groupId>
+    	<artifactId>mahjong-utils</artifactId>
     	<version>0.0.1-SNAPSHOT</version>
   	</dependency>
   </dependencies>
