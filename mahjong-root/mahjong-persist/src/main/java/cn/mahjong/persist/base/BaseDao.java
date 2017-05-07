@@ -1,49 +1,48 @@
 package cn.mahjong.persist.base;
 
 import java.util.List;
-import java.util.Map;
 
 import org.hibernate.Criteria;
 
+import cn.mahjong.model.base.BaseObject;
+import cn.mahjong.model.base.impl.BaseObjectImpl;
+import cn.mahjong.utils.search.PageQuery;
+
 public interface BaseDao {
 
-	public void save(Object Object);
+	public void save(BaseObject baseObject);
 
-	public void saveOrUpdate(Object Object);
+	public void saveOrUpdate(BaseObject baseObject);
 	
-	public void update(Object Object);
+	public void update(BaseObject baseObject);
 
-	public Object getObject(Class<? extends Object> clazz, long id);
+	public BaseObject getObject(Class<? extends BaseObjectImpl> clazz, long id);
 
-	public Object getObject(String className, long id);
+	public BaseObject getObject(String className, long id);
 
-	public Object loadObject(Class<? extends Object> clazz, long id);
+	public BaseObject loadObject(Class<? extends BaseObjectImpl> clazz, long id);
 
-	public Object loadObject(String className, long id);
+	public BaseObject loadObject(String className, long id);
 
-	public List<? extends Object> loadAll(Class<? extends Object> clazz);
+	public List<? extends BaseObject> loadAll(Class<? extends BaseObjectImpl> clazz);
 
-	public void delete(Object Object);
+	public void delete(BaseObject baseObject);
 
-	public void deleteAll(Class<? extends Object> clazz);
+	public void deleteAll(Class<? extends BaseObjectImpl> clazz);
 
-	public Criteria currentCriteria(Class<? extends Object> clazz);
+	public Criteria currentCriteria(Class<? extends BaseObjectImpl> clazz);
 	
-	public Criteria currentCriteria(Class<? extends Object> clazz, String alias);
+	public Criteria currentCriteria(Class<? extends BaseObjectImpl> clazz, String alias);
 
-	public List<Object> find(Class<? extends Object> clazz, Map<String,Object> map, String mode);
-	
-	public List<Object> find(Class<? extends Object> clazz, String[] names, Object[] values, String mode);
+	public List<BaseObject> find(PageQuery pageQuery);
 	
 	public Criteria currentCriteria(String entityName);
 
 	public void flush();
 	
-	public void attach(Object Object);
+	public void attach(BaseObject baseObject);
 
-	public void refresh(Object Object);
+	public void refresh(BaseObject baseObject);
 	
-	public void merge(Object Object);
-	
-
+	public void merge(BaseObject baseObject);
 }

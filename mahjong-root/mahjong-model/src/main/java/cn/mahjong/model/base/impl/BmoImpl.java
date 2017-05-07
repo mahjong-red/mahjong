@@ -27,7 +27,7 @@ public class BmoImpl extends BaseObjectImpl implements Bmo {
 	@Column(name = "update_date", nullable = true)
 	protected Date updateDate;
 
-	@Column(name="is_delete",columnDefinition="BIT DEFAULT FALSE")
+	@Column(name="is_delete",nullable=false,columnDefinition="BIT DEFAULT FALSE")
 	protected Boolean isDelete = false;
 	
 	public Date getCreateDate() {

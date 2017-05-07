@@ -1,31 +1,36 @@
 package cn.mahjong.rest.controller;
 
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import cn.mahjong.core.news.NewsService;
+import cn.mahjong.core.sys.user.UserService;
+import cn.mahjong.dto.RestResp;
 import cn.mahjong.enums.persist.Sex;
-import cn.mahjong.model.News;
-import cn.mahjong.model.impl.NewsImpl;
+import cn.mahjong.enums.persist.UserStatus;
+import cn.mahjong.model.sys.user.User;
+import cn.mahjong.model.sys.user.impl.UserImpl;
+import cn.mahjong.utils.SpringContextUtil;
 
 @Controller
 @RequestMapping(value = "rest/test")
 public class TestController {
 	
 	@Autowired
-	@Qualifier("newsService")
-	public NewsService newsService;
+	public UserService userService;
 	
 	@RequestMapping("1")
 	@ResponseBody
-	public String getString(){
+	public String getString(String name){
 		try {
-			newsService.save1(new NewsImpl(null,"姜满", "aa", "content", Sex.MAN, new Date()));
+			User user = new UserImpl();
+			user.setNickname("红中");
+			user.setUsername(name);
+			user.setPassword("pwd");
+			user.setSex(Sex.MAN);
+			user.setUserStatus(UserStatus.ENABLE);
+			userService.save1(user);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -34,8 +39,10 @@ public class TestController {
 	
 	@RequestMapping("getbyid")
 	@ResponseBody
-	public String get(int id){
-		News news = (News) newsService.getObject(NewsImpl.class, 9);
-		return news.toString();
+	public RestResp get(int id){
+		RestResp resp = new RestResp("0", "", null);
+		User news = (UserImpl) userService.getObject(UserImpl.class, 1);
+		resp.setData(news);
+		return resp;
 	}
 }
