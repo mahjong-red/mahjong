@@ -1,5 +1,6 @@
 package cn.mahjong.model.sys.resource;
 
+import java.util.List;
 import java.util.Set;
 
 import cn.mahjong.enums.persist.ResourceType;
@@ -31,5 +32,9 @@ public interface Resource extends Bmo{
 	public Resource getParent();
 
 	public void setParent(Resource parent);
+	
+	public List<Resource> getChildren();
+
+	public void setChildren(List<Resource> children);
 	
 }

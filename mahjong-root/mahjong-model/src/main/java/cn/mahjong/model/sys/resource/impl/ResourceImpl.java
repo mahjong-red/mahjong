@@ -1,6 +1,8 @@
 package cn.mahjong.model.sys.resource.impl;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -10,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cascade;
@@ -42,7 +46,7 @@ public class ResourceImpl extends BmoImpl implements Resource {
 	 */
 	@Column(name = "url", length = 64)
 	private String url;
-	
+
 	/**
 	 * 排序
 	 */
@@ -60,10 +64,10 @@ public class ResourceImpl extends BmoImpl implements Resource {
 	 * 角色
 	 */
 	@ManyToMany(fetch = FetchType.LAZY, targetEntity = RoleImpl.class)
-	@Cascade(value = { CascadeType.SAVE_UPDATE, CascadeType.DELETE })
-	@JoinTable(name = "sys_resource_role", joinColumns = { @JoinColumn(referencedColumnName = "id", name = "resource_id", nullable = false) }, inverseJoinColumns = { @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false) })
+	@Cascade(value = {CascadeType.SAVE_UPDATE, CascadeType.DELETE})
+	@JoinTable(name = "sys_resource_role", joinColumns = {@JoinColumn(referencedColumnName = "id", name = "resource_id", nullable = false)}, inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)})
 	private Set<Role> roleSet = new HashSet<Role>();
-	
+
 	/**
 	 * 上级资源
 	 */
@@ -71,7 +75,15 @@ public class ResourceImpl extends BmoImpl implements Resource {
 	@Cascade(value = {CascadeType.SAVE_UPDATE})
 	@JoinColumn(name = "parent_id")
 	private Resource parent;
-	
+
+	/**
+	 * 下级资源
+	 */
+	@OneToMany(targetEntity = ResourceImpl.class, mappedBy = "parent", fetch = FetchType.LAZY)
+	@Cascade(value = {CascadeType.SAVE_UPDATE, CascadeType.DELETE})
+	@OrderBy("sequence asc")
+	private List<Resource> children = new ArrayList<Resource>();
+
 	public String getName() {
 		return name;
 	}
@@ -118,5 +130,13 @@ public class ResourceImpl extends BmoImpl implements Resource {
 
 	public void setParent(Resource parent) {
 		this.parent = parent;
+	}
+
+	public List<Resource> getChildren() {
+		return children;
+	}
+
+	public void setChildren(List<Resource> children) {
+		this.children = children;
 	}
 }
