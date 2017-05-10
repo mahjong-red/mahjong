@@ -11,7 +11,6 @@ import cn.mahjong.enums.persist.Sex;
 import cn.mahjong.enums.persist.UserStatus;
 import cn.mahjong.model.sys.user.User;
 import cn.mahjong.model.sys.user.impl.UserImpl;
-import cn.mahjong.utils.SpringContextUtil;
 
 @Controller
 @RequestMapping(value = "rest/test")

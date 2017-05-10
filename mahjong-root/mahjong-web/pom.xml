@@ -1,39 +1,57 @@
 <?xml version="1.0"?>
-<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>cn.mahjong</groupId>
-    <artifactId>mahjong-root</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-  </parent>
-  <artifactId>mahjong-web</artifactId>
-  <packaging>war</packaging>
-  <name>mahjong-web Maven Webapp</name>
-  <url>http://maven.apache.org</url>
-  <build>
-    <finalName>mahjong-web</finalName>
-  </build>
-  <dependencies>
-  	<dependency>
-  		<groupId>cn.mahjong</groupId>
-    	<artifactId>mahjong-model</artifactId>
-    	<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>cn.mahjong</groupId>
-    	<artifactId>mahjong-persist</artifactId>
-    	<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>cn.mahjong</groupId>
-    	<artifactId>mahjong-core</artifactId>
-    	<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>cn.mahjong</groupId>
-    	<artifactId>mahjong-utils</artifactId>
-    	<version>0.0.1-SNAPSHOT</version>
-  	</dependency>
-  </dependencies>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>cn.mahjong</groupId>
+		<artifactId>mahjong-root</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>mahjong-web</artifactId>
+	<packaging>war</packaging>
+	<name>mahjong-web Maven Webapp</name>
+	<url>http://maven.apache.org</url>
+	<build>
+		<finalName>mahjong-web</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.mortbay.jetty</groupId>
+				<artifactId>jetty-maven-plugin</artifactId>
+				<version>8.1.9.v20130131</version>
+				<configuration>
+					<stopKey>stop</stopKey>
+					<stopPort>9999</stopPort>
+					<scanIntervalSeconds>1</scanIntervalSeconds>
+					<!-- <contextXml>${project.basedir}/src/main/resources/jetty-context.xml</contextXml> -->
+					<webApp>
+						<contextPath>/</contextPath>
+					</webApp>
+				</configuration>
+			</plugin>
+		</plugins>
+
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>cn.mahjong</groupId>
+			<artifactId>mahjong-model</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.mahjong</groupId>
+			<artifactId>mahjong-persist</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.mahjong</groupId>
+			<artifactId>mahjong-core</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>cn.mahjong</groupId>
+			<artifactId>mahjong-utils</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+	</dependencies>
 </project>

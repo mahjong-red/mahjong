@@ -1,1 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:sec="http://www.springframework.org/schema/security"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:batch="http://www.springframework.org/schema/batch"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd 
+		http://www.springframework.org/schema/task
+		http://www.springframework.org/schema/task/spring-task-4.0.xsd
+		">
+
+	<!-- 启动定时任务注解 -->
+	<task:annotation-driven  />
+
+	<context:annotation-config />
+	
+	<context:component-scan base-package="cn.mahjong.core,cn.mahjong.persist">
+	</context:component-scan>
+	
+	<bean class="cn.mahjong.utils.SpringContextUtil"></bean>
+	
+	<context:property-placeholder order="0"
+		ignore-unresolvable="true" properties-ref="propertiesConfig" />
+
+	<bean id="propertiesConfig"
+		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="locations">
+			<list>
+				<value>classpath*:/properties/application.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<import resource="classpath:spring/spring-hibernate.xml" />
+	<import resource="classpath:spring/spring-transaction.xml" />
+	
+</beans>

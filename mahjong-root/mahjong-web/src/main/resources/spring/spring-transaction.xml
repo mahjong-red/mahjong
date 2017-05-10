@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:sec="http://www.springframework.org/schema/security" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.0.xsd
+        http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd 
+		http://www.springframework.org/schema/security
+		http://www.springframework.org/schema/security/spring-security-3.2.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx-3.2.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
+		">
+
+	<bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+		<property name="nestedTransactionAllowed" value="true" />
+	</bean>
+
+	<tx:advice id="advice" transaction-manager="transactionManager">
+		<tx:attributes>
+		    <tx:method name="create*" propagation="REQUIRED" />
+		    <tx:method name="update*" propagation="REQUIRED" />
+		    <tx:method name="delete*" propagation="REQUIRED" />
+			<tx:method name="save*" propagation="REQUIRED" />
+			<tx:method name="*Tx" propagation="REQUIRED" />
+			<tx:method name="loadUserByUsername" propagation="REQUIRED" />
+			<tx:method name="loadUserByUserId" propagation="REQUIRED" />
+			<!-- 
+		    <tx:method name="attach" propagation="REQUIRED" />
+		    <tx:method name="refresh" propagation="REQUIRED" />
+			<tx:method name="find*" propagation="REQUIRED" />
+			<tx:method name="load*" propagation="REQUIRED" />
+			<tx:method name="get*"  propagation="REQUIRED" />
+			<tx:method name="is*"  propagation="REQUIRED" />
+			 -->
+			<tx:method name="init*"  propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice>
+	
+	<aop:aspectj-autoproxy proxy-target-class="true" expose-proxy="true" />
+	
+	<aop:config expose-proxy="true">
+		<!--execution第一个星号代表任何返回类型，第二个星号代表com.lb.service下的所有包，第三个星号代表所有方法，括号中的两个点代表任何参数 -->
+		<aop:pointcut id="servicePointcut" expression="execution(public * cn.mahjong.core..*.*(..))" />
+		<aop:advisor advice-ref="advice" pointcut-ref="servicePointcut" order="1" />
+	</aop:config>
+</beans>

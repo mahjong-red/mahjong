@@ -1,18 +1,19 @@
 package cn.mahjong.core.base.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import cn.mahjong.core.base.BaseService;
 import cn.mahjong.model.base.BaseObject;
+import cn.mahjong.model.base.Bmo;
 import cn.mahjong.model.base.impl.BaseObjectImpl;
 import cn.mahjong.persist.base.BaseDao;
 import cn.mahjong.utils.search.PageQuery;
 
-@Service
+@Service("baseService")
 public class BaseServiceImpl implements BaseService {
 
 	@Autowired
@@ -22,6 +23,13 @@ public class BaseServiceImpl implements BaseService {
 		baseDao.save(baseObject);
 	}
 
+	public void save(Bmo bmo) {
+		Date now = new Date();
+		bmo.setCreateDate(now);
+		bmo.setUpdateDate(now);
+		baseDao.save(bmo);
+	}
+	
 	public void saveOrUpdate(BaseObject baseObject) {
 		baseDao.saveOrUpdate(baseObject);
 	}
@@ -30,6 +38,12 @@ public class BaseServiceImpl implements BaseService {
 		baseDao.update(baseObject);
 	}
 
+	public void update(Bmo bmo) {
+		Date now = new Date();
+		bmo.setUpdateDate(now);
+		baseDao.save(bmo);
+	}
+	
 	public BaseObject getObject(Class<? extends BaseObjectImpl> clazz, long id) {
 		return baseDao.getObject(clazz, id);
 	}

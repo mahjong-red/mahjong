@@ -6,7 +6,7 @@ import cn.mahjong.core.base.impl.BaseServiceImpl;
 import cn.mahjong.core.sys.user.UserService;
 import cn.mahjong.model.sys.user.User;
 
-@Service
+@Service("userService")
 public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 	@Override
