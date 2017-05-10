@@ -3,11 +3,19 @@ package cn.mahjong.model.base.impl;
 import java.util.Date;
 
 import javax.persistence.Column;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 import cn.mahjong.model.base.Bmo;
+import cn.mahjong.model.sys.user.User;
+import cn.mahjong.model.sys.user.impl.UserImpl;
 
 /**
  * 业务模型对象 所有业务模型对象的基类
@@ -27,6 +35,16 @@ public class BmoImpl extends BaseObjectImpl implements Bmo {
 	@Column(name = "update_date", nullable = true)
 	protected Date updateDate;
 
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = UserImpl.class)
+	@Cascade(value = { CascadeType.SAVE_UPDATE })
+	@JoinColumn(name = "create_user_id")
+	protected User createUser;
+	
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = UserImpl.class)
+	@Cascade(value = { CascadeType.SAVE_UPDATE })
+	@JoinColumn(name = "update_user_id")
+	protected User updateUser;
+	
 	@Column(name="is_delete",nullable=false,columnDefinition="BIT DEFAULT FALSE")
 	protected Boolean isDelete = false;
 	

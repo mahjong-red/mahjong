@@ -1,9 +1,18 @@
 package cn.mahjong.model.sys.user.impl;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Proxy;
 import org.hibernate.annotations.Type;
@@ -11,6 +20,8 @@ import org.hibernate.annotations.Type;
 import cn.mahjong.enums.persist.Sex;
 import cn.mahjong.enums.persist.UserStatus;
 import cn.mahjong.model.base.impl.BmoImpl;
+import cn.mahjong.model.sys.role.Role;
+import cn.mahjong.model.sys.role.impl.RoleImpl;
 import cn.mahjong.model.sys.user.User;
 
 @Entity
@@ -52,6 +63,11 @@ public class UserImpl extends BmoImpl implements User {
 	@Type(type = "cn.mahjong.enums.persist.PersistEnumType", parameters = {@Parameter(name = "enumClass", value = "cn.mahjong.enums.persist.UserStatus")})
 	private UserStatus userStatus;
 
+	@ManyToMany(fetch = FetchType.LAZY, targetEntity = RoleImpl.class)
+	@Cascade(value = { CascadeType.SAVE_UPDATE, CascadeType.DELETE })
+	@JoinTable(name = "sys_user_role", joinColumns = { @JoinColumn(referencedColumnName = "id", name = "user_id", nullable = false) }, inverseJoinColumns = { @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false) })
+	private Set<Role> roleSet = new HashSet<Role>();
+	
 	public String getUsername() {
 		return username;
 	}
@@ -90,5 +106,13 @@ public class UserImpl extends BmoImpl implements User {
 
 	public void setUserStatus(UserStatus userStatus) {
 		this.userStatus = userStatus;
+	}
+
+	public Set<Role> getRoleSet() {
+		return roleSet;
+	}
+
+	public void setRoleSet(Set<Role> roleSet) {
+		this.roleSet = roleSet;
 	}
 }
