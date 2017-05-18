@@ -12,9 +12,5 @@ public class SystemStartListener implements ApplicationListener<ContextRefreshed
 	public void onApplicationEvent(ContextRefreshedEvent event) {
 		MahjongSecurityMetadata mahjongSecurityMetadata = (MahjongSecurityMetadata) SpringContextUtil.getBean("mahjongSecurityMetadata");
 		mahjongSecurityMetadata.initSecurityMeta();
-		System.out.println("====================");
-		System.out.println("========start============");
-		System.out.println("====================");
-
 	}
 }
