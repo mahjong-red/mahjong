@@ -5,5 +5,5 @@ import cn.mahjong.model.sys.user.User;
 
 public interface UserService extends BaseService{
 	
-	public void save1(User user) throws Exception ;
+	public User loadByUserName(String username);
 }

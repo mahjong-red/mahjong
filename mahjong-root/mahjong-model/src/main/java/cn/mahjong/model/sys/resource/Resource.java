@@ -36,5 +36,8 @@ public interface Resource extends Bmo{
 	public List<Resource> getChildren();
 
 	public void setChildren(List<Resource> children);
-	
+
+	public String getIconCls();
+
+	public void setIconCls(String iconCls);
 }

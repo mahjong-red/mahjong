@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.mahjong.core.sys.user.UserService;
 import cn.mahjong.dto.RestResp;
-import cn.mahjong.enums.persist.Sex;
-import cn.mahjong.enums.persist.UserStatus;
 import cn.mahjong.model.sys.user.User;
 import cn.mahjong.model.sys.user.impl.UserImpl;
 
@@ -19,22 +17,6 @@ public class TestController {
 	@Autowired
 	public UserService userService;
 	
-	@RequestMapping("1")
-	@ResponseBody
-	public String getString(String name){
-		try {
-			User user = new UserImpl();
-			user.setNickname("红中");
-			user.setUsername(name);
-			user.setPassword("pwd");
-			user.setSex(Sex.MAN);
-			user.setUserStatus(UserStatus.ENABLE);
-			userService.save1(user);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "success";
-	}
 	
 	@RequestMapping("getbyid")
 	@ResponseBody

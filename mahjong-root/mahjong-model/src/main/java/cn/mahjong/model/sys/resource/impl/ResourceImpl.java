@@ -52,6 +52,12 @@ public class ResourceImpl extends BmoImpl implements Resource {
 	 */
 	@Column(name = "sequence", length = 64)
 	private String sequence;
+	
+	/**
+	 * 显示图标
+	 */
+	@Column(name = "icon_cls", length = 64)
+	private String iconCls;
 
 	/**
 	 * 状态
@@ -138,5 +144,13 @@ public class ResourceImpl extends BmoImpl implements Resource {
 
 	public void setChildren(List<Resource> children) {
 		this.children = children;
+	}
+
+	public String getIconCls() {
+		return iconCls;
+	}
+
+	public void setIconCls(String iconCls) {
+		this.iconCls = iconCls;
 	}
 }

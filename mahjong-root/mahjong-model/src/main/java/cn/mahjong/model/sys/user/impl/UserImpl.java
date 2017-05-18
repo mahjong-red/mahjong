@@ -1,6 +1,9 @@
 package cn.mahjong.model.sys.user.impl;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -16,6 +19,9 @@ import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Proxy;
 import org.hibernate.annotations.Type;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import cn.mahjong.enums.persist.Sex;
 import cn.mahjong.enums.persist.UserStatus;
@@ -27,7 +33,7 @@ import cn.mahjong.model.sys.user.User;
 @Entity
 @Table(name = "sys_user")
 @Proxy(lazy = true, proxyClass = User.class)
-public class UserImpl extends BmoImpl implements User {
+public class UserImpl extends BmoImpl implements User,UserDetails {
 
 	private static final long serialVersionUID = -2797367290465806561L;
 
@@ -115,4 +121,34 @@ public class UserImpl extends BmoImpl implements User {
 	public void setRoleSet(Set<Role> roleSet) {
 		this.roleSet = roleSet;
 	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		List<GrantedAuthority> list = new ArrayList<GrantedAuthority>();
+		for (Role role : roleSet) {
+			list.add(new SimpleGrantedAuthority(role.getCode()));
+		}
+		return list;
+	}
+	
+	@Override
+	public boolean isAccountNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
+
 }

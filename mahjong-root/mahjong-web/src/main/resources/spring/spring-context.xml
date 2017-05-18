@@ -23,6 +23,7 @@
 	<context:component-scan base-package="cn.mahjong.core,cn.mahjong.persist">
 	</context:component-scan>
 	
+	<bean class="cn.mahjong.core.sys.listener.SystemStartListener"  />
 	<bean class="cn.mahjong.utils.SpringContextUtil"></bean>
 	
 	<context:property-placeholder order="0"
@@ -39,5 +40,6 @@
 	
 	<import resource="classpath:spring/spring-hibernate.xml" />
 	<import resource="classpath:spring/spring-transaction.xml" />
+	<import resource="classpath:spring/spring-security.xml" />
 	
 </beans>

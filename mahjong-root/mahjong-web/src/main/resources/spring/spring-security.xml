@@ -21,68 +21,78 @@
 		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
 		">
 
-	<!-- <sec:debug />
-	<sec:http security="none" pattern="/views/login.jsp" />
-	<sec:http security="none" pattern="/static/**" />
-	<sec:http use-expressions="true" auto-config="true">
-		<sec:intercept-url pattern="/**" access="hasRole('ROLE_USER')" />
-
-		同一时间内允许同一账号保持4个在线,error-if-maximum-exceeded="true"表示第第四个以后的登不进去
-		<sec:session-management>
-			<sec:concurrency-control max-sessions="4"
-				error-if-maximum-exceeded="true" />
-		</sec:session-management>
-		<sec:form-login login-page="/login.jsp"
-			authentication-failure-handler-ref="authenticationFailureHandlerImpl"
-			authentication-success-handler-ref="authenticationSuccessHandlerImpl" />
-		<sec:logout logout-success-url="/logout.jsp" logout-url="logout"
-			invalidate-session="true" delete-cookies="JSESSIONID" />
-	</sec:http>
+	<sec:http pattern="/**/*.css" security="none" />
+	<sec:http pattern="/**/*.jpg" security="none" />
+	<sec:http pattern="/**/*.jpeg" security="none" />
+	<sec:http pattern="/**/*.gif" security="none" />
+	<sec:http pattern="/**/*.png" security="none" />
+	<sec:http pattern="/**/*.js" security="none" />
+	<sec:http pattern="/**/*.ico" security="none" />
+	<sec:http pattern="/**/*.jsp" security="none" />
 
 	<sec:http auto-config="true" >
-		<sec:intercept-url pattern="/**" access="ROLE_ADMIN" />
+ 		<sec:intercept-url pattern="/**" access="ROLE_ADMIN" />
+		
 		<sec:form-login 
 			login-page="/views/login.jsp" 
-			authentication-failure-url="/views/login.jsp" 
-			default-target-url="/Index" 
+			authentication-failure-url="/views/login.jsp"
+			default-target-url="/"
 			login-processing-url="/j_spring_security_check"
-			username-parameter="userName" 
+			username-parameter="username" 
 			password-parameter="password"
 			 />
 		<sec:remember-me  />
 		
 		<sec:logout 
+			delete-cookies="openMenu"
 			invalidate-session="true"
 			logout-url="/j_spring_security_logout" 
 			logout-success-url="/views/login.jsp" />
 			
-		<sec:access-denied-handler  ref="sysAccessDeniedHandler"/>
+		<sec:access-denied-handler ref="mahjongAccessDeniedHandler"/>
 		<sec:custom-filter ref="sessionManagementFilter" before="SESSION_MANAGEMENT_FILTER"/>
+		<sec:custom-filter ref="mahjongSecurityFilter" before="FILTER_SECURITY_INTERCEPTOR"/>
 	</sec:http>
 	
-
-	<sec:authentication-manager>
-		<authentication-provider>
-		<user-service>
-		<user name="admin" password="123" authorities="ROLE_USER"/>
-		</user-service>
-		</authentication-provider>
-		<sec:authentication-provider
-			user-service-ref="userService">
-			<sec:password-encoder hash="bcrypt" />
-		</sec:authentication-provider>
-	</sec:authentication-manager>
-
-	<bean id="userService" class="com.**.user.service.impl.UserServiceImpl" />
-
-	认证成功调用 主要实现AuthenticationSuccessHandler这个类的onAuthenticationSuccess方法
-	<bean id="authenticationSuccessHandlerImpl"
-		class="cn.mahjong.core.security.AuthenticationSuccessHandlerImpl">
-		<property name="url" value="/welcome.jsp" />
+	<bean id="mahjongAccessDeniedHandler" class="cn.mahjong.core.security.MahjongAccessDeniedHandler" />
+	<bean id="sessionManagementFilter" class="org.springframework.security.web.session.SessionManagementFilter">
+        <constructor-arg name="securityContextRepository" ref="httpSessionSecurityContextRepository" />
+        <property name="invalidSessionStrategy" ref="mahjongInvalidSessionHandler" />
+    </bean>
+    <bean id="httpSessionSecurityContextRepository" class="org.springframework.security.web.context.HttpSessionSecurityContextRepository"></bean>
+    
+    <bean id="mahjongInvalidSessionHandler" class="cn.mahjong.core.security.MahjongInvalidSessionHandler">
+		<property name="redirectUrl" value="/views/login.jsp"></property>
+		<property name="removeCookies">
+			<array>
+				<value>openMenu</value>
+			</array>
+		</property>
 	</bean>
-	<bean id="sysAccessDeniedHandler" class="cn.mahjong.core.security.SysAccessDeniedHandler"></bean>
-	<bean id="authenticationFailureHandlerImpl"
-		class="cn.mahjong.core.security.AuthenticationFailureHandlerImpl">
-		<property name="errorUrl" value="/error.jsp" />
-	</bean> -->
+	
+    <bean id="mahjongSecurityFilter" class="cn.mahjong.core.security.MahjongSecurityFilter">
+		<property name="authenticationManager" ref="authenticationManager" />  
+        <property name="accessDecisionManager" ref="mahjongAccessDecisionManager" />  
+        <property name="metadata" ref="mahjongSecurityMetadata" />
+        <property name="rejectPublicInvocations" value="true" />
+	</bean>
+    
+    <bean id="mahjongSecurityMetadata" class="cn.mahjong.core.security.MahjongSecurityMetadata"></bean>
+    <bean id="mahjongAccessDecisionManager" class="cn.mahjong.core.security.MahjongAccessDecisionManager"></bean>
+    
+	<bean id="authenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+		<property name="hideUserNotFoundExceptions" value="false" />
+		<property name="userDetailsService" ref="userService" />
+		<property name="passwordEncoder" ref="passwordEncode" />
+		<property name="saltSource" ref="saltSource" />
+	</bean>
+	
+	<sec:authentication-manager erase-credentials="false" alias="authenticationManager">
+		<sec:authentication-provider ref="authenticationProvider" />
+	</sec:authentication-manager>
+	
+	<bean id="passwordEncode" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder" />
+	<bean id="saltSource" class="org.springframework.security.authentication.dao.ReflectionSaltSource">
+		<property name="userPropertyToUse" value="username" />
+	</bean>
 </beans>
