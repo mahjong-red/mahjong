@@ -1,6 +1,5 @@
 package cn.mahjong.web.sys.user.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,7 +27,6 @@ public class UserController extends BaseController {
 
 	@Autowired
 	private UserService userService;
-	
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/Find")
@@ -38,11 +36,7 @@ public class UserController extends BaseController {
 		BindingUtil.bindPageProperty(pageQuery, request);
 		BindingUtil.bindSearchProperty(pageQuery, request);
 		List<User> list = (List<User>) userService.find(pageQuery);
-		List<UserDto> resultList = new ArrayList<UserDto>();
-		for (User user : list) {
-			resultList.add(new UserDto(user));
-		}
-		return new PageData((int)pageQuery.getTotal(), resultList);
+		return new PageData(pageQuery.getTotal(), BindingUtil.convertToDtoList(list, User.class, UserDto.class));
 	}
 	
 	@Override

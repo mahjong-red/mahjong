@@ -21,6 +21,7 @@
 		http://www.springframework.org/schema/aop/spring-aop-3.2.xsd
 		">
 
+	<sec:http pattern="/views/login.jsp" security="none"></sec:http>
 	<sec:http pattern="/**/*.css" security="none" />
 	<sec:http pattern="/**/*.jpg" security="none" />
 	<sec:http pattern="/**/*.jpeg" security="none" />
@@ -30,9 +31,8 @@
 	<sec:http pattern="/**/*.ico" security="none" />
 	<sec:http pattern="/**/*.jsp" security="none" />
 
-	<sec:http auto-config="true" >
- 		<sec:intercept-url pattern="/**" access="ROLE_ADMIN" />
-		
+	<sec:http auto-config="true"  >
+ 		<!-- <sec:intercept-url pattern="/**" access="ROLE_ADMIN" /> -->
 		<sec:form-login 
 			login-page="/views/login.jsp" 
 			authentication-failure-url="/views/login.jsp"
@@ -41,8 +41,7 @@
 			username-parameter="username" 
 			password-parameter="password"
 			 />
-		<sec:remember-me  />
-		
+		<sec:session-management session-fixation-protection="none"></sec:session-management>
 		<sec:logout 
 			delete-cookies="openMenu"
 			invalidate-session="true"
@@ -54,7 +53,7 @@
 		<sec:custom-filter ref="mahjongSecurityFilter" before="FILTER_SECURITY_INTERCEPTOR"/>
 	</sec:http>
 	
-	<bean id="mahjongAccessDeniedHandler" class="cn.mahjong.core.security.MahjongAccessDeniedHandler" />
+	<bean id="mahjongAccessDeniedHandler" class="cn.mahjong.core.security.MahjongAccessDeniedHandler"></bean>
 	<bean id="sessionManagementFilter" class="org.springframework.security.web.session.SessionManagementFilter">
         <constructor-arg name="securityContextRepository" ref="httpSessionSecurityContextRepository" />
         <property name="invalidSessionStrategy" ref="mahjongInvalidSessionHandler" />

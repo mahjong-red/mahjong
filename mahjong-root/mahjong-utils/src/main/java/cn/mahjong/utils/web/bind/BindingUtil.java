@@ -269,7 +269,7 @@ public class BindingUtil {
 		}
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({ "rawtypes", "unchecked", "unused" })
 	public static void bindObject(BaseObject baseObject, MutablePropertyValues mpvs, Validator validator) {
 		List<PropertyValue> propertyValueList = mpvs.getPropertyValueList();
 		DataBinder dataBinder = new DataBinder(baseObject);

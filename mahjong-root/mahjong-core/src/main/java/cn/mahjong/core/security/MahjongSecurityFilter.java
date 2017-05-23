@@ -43,7 +43,7 @@ public class MahjongSecurityFilter extends AbstractSecurityInterceptor implement
         invoke(fi);
 	}
 	
-	public void invoke(FilterInvocation fi) throws IOException, ServletException {  
+	public void invoke(FilterInvocation fi) throws IOException, ServletException {
 		
 		InterceptorStatusToken token = null;
 		
@@ -53,14 +53,8 @@ public class MahjongSecurityFilter extends AbstractSecurityInterceptor implement
 			
 			fi.getChain().doFilter(fi.getRequest(), fi.getResponse());
 		} catch (Exception e) {
-			e.printStackTrace();
-//			if (e instanceof IllegalArgumentException){
-//				throw new AccessDeniedException(ACCESS_DENIED);
-//			}
-//			
-//			throw new RuntimeException(e.getMessage());
+			throw new AccessDeniedException(ACCESS_DENIED); 
 		} finally {
-			
             super.afterInvocation(token, null);  
         }  
     } 

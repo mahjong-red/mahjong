@@ -10,6 +10,7 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.stereotype.Component;
 
 import cn.mahjong.dto.RestResp;
 
@@ -18,6 +19,7 @@ import com.alibaba.fastjson.JSONObject;
 /**
  * 访问被拒绝
  */
+@Component
 public class MahjongAccessDeniedHandler implements AccessDeniedHandler {
 	
 	private static final String RESPONSE_TYPE_JSON = "application/json";
