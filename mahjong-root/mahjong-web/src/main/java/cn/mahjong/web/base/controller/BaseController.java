@@ -1,11 +1,16 @@
 package cn.mahjong.web.base.controller;
 
+import java.io.File;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.mahjong.core.base.BaseService;
@@ -25,14 +30,24 @@ public abstract class BaseController {
 	
 	@RequestMapping
 	protected String onSubmit(HttpServletRequest request, HttpServletResponse response, Model model) {
-		String controllerName = request.getServletPath().substring(1);
-		return controllerName + "/" + controllerName;
+		String servletPath = request.getServletPath();
+		return servletPath + servletPath;
 	}
 	
-	@RequestMapping(value = "/Create")
+	@RequestMapping(value="{operate}",method = RequestMethod.GET)
+	protected String operate(@PathVariable("operate") String operate,HttpServletRequest request, Model model) {
+		String servletPath = request.getServletPath();
+		String id = request.getParameter("id");
+		if (StringUtils.isNotEmpty(id)) {
+			model.addAttribute("object", baseService.loadObject(baseObjectClass, Long.parseLong(id)));
+		}
+		return servletPath.substring(1, servletPath.indexOf(File.separatorChar,1)) + File.separatorChar + servletPath.replace(File.separator, "");
+	}
+	
+	@RequestMapping(value = "/Create",method = RequestMethod.POST)
 	@ResponseBody
 	protected RestResp create(HttpServletRequest request, HttpServletResponse response, Model model) {
-		RestResp resp = new RestResp("0",null,null);
+		RestResp resp = new RestResp("0","ok",null);
 		try {
 			BaseObject baseObject = baseObjectClass.newInstance();
 			BindingUtil.bindObject(baseObject, request, null);

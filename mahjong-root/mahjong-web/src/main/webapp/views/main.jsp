@@ -10,10 +10,12 @@
 <link rel="stylesheet" type="text/css" href="<c:url value="/static/js/jquery-easyui-1.5.2/themes/default/easyui.css" />" />
 <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/main/wu.css" />" />
 <link rel="stylesheet" type="text/css" href="<c:url value="/static/css/main/icon.css" />" />
-
+<link rel="stylesheet" type="text/css" href="<c:url value="/static/js/lhgDialog/skins/default.css" />" />
 <script type="text/javascript" src="<c:url value="/static/js/jquery-1.8.0.min.js" />"></script>
 <script type="text/javascript" src="<c:url value="/static/js/jquery-easyui-1.5.2/jquery.easyui.min.js" />"></script>
 <script type="text/javascript" src="<c:url value="/static/js/jquery-easyui-1.5.2/locale/easyui-lang-zh_CN.js" />"></script>
+<script type="text/javascript" src="<c:url value="/static/js/curdtools.js" />"></script>
+<script type="text/javascript" src="<c:url value="/static/js/lhgDialog/lhgdialog.min.js" />"></script>
 </head>
 
 <body class="easyui-layout">

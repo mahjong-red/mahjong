@@ -53,6 +53,7 @@ public class MahjongSecurityFilter extends AbstractSecurityInterceptor implement
 			
 			fi.getChain().doFilter(fi.getRequest(), fi.getResponse());
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new AccessDeniedException(ACCESS_DENIED); 
 		} finally {
             super.afterInvocation(token, null);  
