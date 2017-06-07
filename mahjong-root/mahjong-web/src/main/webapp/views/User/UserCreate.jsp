@@ -29,15 +29,3 @@
 		</tr>
 	</table>
 </form>
-<div style="text-align:center;padding:5px">
-	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="submitForm()">Submit</a>
-	<a href="javascript:void(0)" class="easyui-linkbutton" onclick="clearForm()">Clear</a>
-</div>
-<script>
-	function submitForm() {
-		$('#UserCreateForm').form('submit');
-	}
-	function clearForm() {
-		$('#UserCreateForm').form('clear');
-	}
-</script>

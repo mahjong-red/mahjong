@@ -13,6 +13,7 @@
 <script type="text/javascript" src="<c:url value="/static/js/jquery-1.8.0.min.js" />"></script>
 <script type="text/javascript" src="<c:url value="/static/js/jquery-easyui-1.5.2/jquery.easyui.min.js" />"></script>
 <script type="text/javascript" src="<c:url value="/static/js/jquery-easyui-1.5.2/locale/easyui-lang-zh_CN.js" />"></script>
+<script type="text/javascript" src="<c:url value="/static/js/jquery-easyui-1.5.2/validatebox.js" />"></script>
 </head>
 
 <body class="easyui-layout">
