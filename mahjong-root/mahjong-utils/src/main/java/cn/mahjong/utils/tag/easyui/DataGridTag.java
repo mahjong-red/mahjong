@@ -50,14 +50,11 @@ public class DataGridTag extends TagSupport {
 	private String width;
 	private String height;
 	private boolean checkbox = false;// 是否显示复选框
-	private boolean showPageList = true;// 定义是否显示页面列表
 	private boolean openFirstNode = false;// 是不是展开第一个节点
 	private boolean fit = true;// 是否允许表格自动缩放，以适应父容器
 	private boolean fitColumns = true;// 当为true时，自动展开/合同列的大小，以适应的宽度，防止横向滚动.
 	private String sortName;// 定义的列进行排序
 	private String sortOrder = "asc";// 定义列的排序顺序，只能是"递增"或"降序".
-	private boolean showRefresh = true;// 定义是否显示刷新按钮
-	private boolean showText = true;// 定义是否显示刷新按钮
 	private String style = "easyui";// 列表样式easyui,datatables
 	private String onLoadSuccess;// 数据加载完成调用方法
 	private String onClick;// 单击事件调用方法
@@ -84,10 +81,6 @@ public class DataGridTag extends TagSupport {
 
 	public void setOnDblClick(String onDblClick) {
 		this.onDblClick = onDblClick;
-	}
-
-	public void setShowText(boolean showText) {
-		this.showText = showText;
 	}
 
 	public void setPagination(boolean pagination) {
@@ -134,13 +127,6 @@ public class DataGridTag extends TagSupport {
 		this.fit = fit;
 	}
 
-	public void setShowPageList(boolean showPageList) {
-		this.showPageList = showPageList;
-	}
-
-	public void setShowRefresh(boolean showRefresh) {
-		this.showRefresh = showRefresh;
-	}
 	/**
 	 * 设置询问操作URL
 	 */
@@ -487,7 +473,7 @@ public class DataGridTag extends TagSupport {
 		
 		if(autoLoadData)
 		   sb.append("url:\'" + actionUrl + "\',");
-//			sb.append("url:\'" + actionUrl + "&field=" + fields + "\',");
+//			sb.append("url:\'" + actionUrl + "?field=" + fields + "\',");
 		else
 			sb.append("url:\'',");
 		if(StringUtils.isNotEmpty(rowStyler)){
@@ -574,12 +560,12 @@ public class DataGridTag extends TagSupport {
 			sb.append("function " + name + "search(){");
 			sb.append("var queryParams=$(\'#" + name + "\').datagrid('options').queryParams;");
 			sb.append("$(\'#" + name + "tb\').find('*').each(function(){queryParams[$(this).attr('name')]=$(this).val();});");
-			sb.append("$(\'#" + name + "\')." + grid + "({url:'" + actionUrl + "&field=" + searchFields + "',pageNumber:1});" + "}");
+			sb.append("$(\'#" + name + "\')." + grid + "({url:'" + actionUrl + "?field=" + searchFields + "',pageNumber:1});" + "}");
 			
 			//高级查询执行方法
 			sb.append("function dosearch(params){");
 			sb.append("var jsonparams=$.parseJSON(params);");
-			sb.append("$(\'#" + name + "\')." + grid + "({url:'" + actionUrl + "&field=" + searchFields + "',queryParams:jsonparams});" + "}");
+			sb.append("$(\'#" + name + "\')." + grid + "({url:'" + actionUrl + "?field=" + searchFields + "',queryParams:jsonparams});" + "}");
 			
 			 //searchbox框执行方法
 			  searchboxFun(sb,grid);
