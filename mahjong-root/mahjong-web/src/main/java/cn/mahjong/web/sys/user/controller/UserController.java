@@ -6,12 +6,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.mahjong.core.sys.user.UserService;
+import cn.mahjong.dto.RestResp;
+import cn.mahjong.model.base.BaseObject;
 import cn.mahjong.model.base.impl.BaseObjectImpl;
 import cn.mahjong.model.sys.user.User;
 import cn.mahjong.model.sys.user.impl.UserImpl;
@@ -42,5 +46,29 @@ public class UserController extends BaseController {
 	@Override
 	public Class<? extends BaseObjectImpl> getBaseObjectClass() {
 		return UserImpl.class;
+	}
+	
+	@RequestMapping(value = "/CreateUser",method = RequestMethod.POST)
+	@ResponseBody
+	public RestResp createUser(HttpServletRequest request, HttpServletResponse response, Model model) {
+		RestResp resp = new RestResp("0","ok",null);
+		User user = new UserImpl();
+		BindingUtil.bindObject(user, request, null);
+		Md5PasswordEncoder encoder = new Md5PasswordEncoder();
+		user.setPassword(encoder.encodePassword(user.getPassword(), user.getUsername()));
+		userService.save(user);
+		return resp;
+	}
+	
+	@RequestMapping(value = "/CheckUserName")
+	@ResponseBody
+	protected RestResp checkUserName(HttpServletRequest request, HttpServletResponse response, Model model,String username) {
+		RestResp resp = new RestResp("0","ok",null);
+		User user = userService.loadByUserName(username);
+		if (user != null) {
+			resp.setCode("1");
+			resp.setMsg("用户名已存在");
+		}
+		return resp;
 	}
 }

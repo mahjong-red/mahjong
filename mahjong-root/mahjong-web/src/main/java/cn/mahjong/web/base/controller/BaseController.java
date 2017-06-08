@@ -34,15 +34,15 @@ public abstract class BaseController {
 		return servletPath + servletPath;
 	}
 	
-	@RequestMapping(value="{operate}",method = RequestMethod.GET)
-	protected String operate(@PathVariable("operate") String operate,HttpServletRequest request, Model model) {
-		String servletPath = request.getServletPath();
-		String id = request.getParameter("id");
-		if (StringUtils.isNotEmpty(id)) {
-			model.addAttribute("object", baseService.loadObject(baseObjectClass, Long.parseLong(id)));
-		}
-		return servletPath.substring(1, servletPath.indexOf(File.separatorChar,1)) + File.separatorChar + servletPath.replace(File.separator, "");
-	}
+//	@RequestMapping(value="{operate}",method = RequestMethod.GET)
+//	protected String operate(@PathVariable("operate") String operate,HttpServletRequest request, Model model) {
+//		String servletPath = request.getServletPath();
+//		String id = request.getParameter("id");
+//		if (StringUtils.isNotEmpty(id)) {
+//			model.addAttribute("object", baseService.loadObject(baseObjectClass, Long.parseLong(id)));
+//		}
+//		return servletPath.substring(1, servletPath.indexOf(File.separatorChar,1)) + File.separatorChar + servletPath.replace(File.separator, "");
+//	}
 	
 	@RequestMapping(value = "/Create",method = RequestMethod.POST)
 	@ResponseBody

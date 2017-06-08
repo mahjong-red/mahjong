@@ -36,8 +36,9 @@
 					</form>
 					<c:if test="${not empty  SPRING_SECURITY_LAST_EXCEPTION}">
 					<h2>
-						<label class="bg-red disabled color-palette" style="width: 90%">
-						登录失败
+						<label class="bg-red disabled color-palette" style="width: 90%;color: red">
+						登录失败<br />
+						${sessionScope.SPRING_SECURITY_LAST_EXCEPTION.message}
 						</label>
 					</h2>
 					</c:if>

@@ -16,12 +16,14 @@
 </t:datagrid>
 <div id="userlistWindow" class="easyui-dialog" title="编辑" data-options="iconCls:'icon-edit',closed:true,buttons: [{
 		text:'保存',iconCls:'icon-ok',handler:function(){save();}}]" style="width:400px;padding:10px" >
-	<form id="UserCreateForm" method="post" class="easyui-form" action="<c:url value="/User/Create" />" >
+	<form id="UserCreateForm" method="post" class="easyui-form" action="<c:url value="/User/CreateUser" />" >
 		<table cellpadding="5">
 			<tr>
 				<td width="30%">用户名: </td>
 				<td><input class="easyui-textbox" type="text" name="username"
-					data-options="required:true,validType:'length[2,20]',invalidMessage:'用户名长度为2~20.'"></input></td>
+					data-options="required:true,validType:'length[2,20]',invalidMessage:'用户名长度为2~20.'"></input>
+					<input type="hidden" name="id" />
+				</td>
 			</tr>
 			<tr>
 				<td>昵称:</td>
@@ -36,13 +38,13 @@
 			<tr>
 				<td>性别:</td>
 				<td><t:enumSelectTag id="UserCreateFormSex" name="sex" enumClass="cn.mahjong.enums.persist.Sex" 
-					css="easyui-combobox" dataOptions="required:true,invalidMessage:'请选择性别',editable:false,validType:'comboxValidate(UserCreateFormSex)'" ></t:enumSelectTag></td>
+					css="easyui-combobox" dataOptions="panelHeight:'auto',required:true,invalidMessage:'请选择性别',editable:false,validType:'comboxValidate(UserCreateFormSex)'" ></t:enumSelectTag></td>
 			</tr>
 			<tr>
 				<td>状态:</td>
 				<td>
 					<t:enumSelectTag id="UserCreateFormUserStatus" name="userStatus" enumClass="cn.mahjong.enums.persist.UserStatus"
-					css="easyui-combobox" defaultVal="1" dataOptions="required:true,invalidMessage:'请选择状态',editable:false,validType:'comboxValidate(UserCreateFormUserStatus)'" ></t:enumSelectTag>
+					css="easyui-combobox" defaultVal="1" dataOptions="panelHeight:'auto',required:true,invalidMessage:'请选择状态',editable:false,validType:'comboxValidate(UserCreateFormUserStatus)'" ></t:enumSelectTag>
 				</td>
 			</tr>
 		</table>
@@ -56,7 +58,11 @@
 		$('#UserCreateForm').form('submit',{
 			onSubmit:function(){
 				return $(this).form('enableValidation').form('validate');
-			}
+			},
+			success:function(data){
+				//var data = eval('(' + data + ')');
+				alert(data)
+		    }
 		});
 	}
 </script>

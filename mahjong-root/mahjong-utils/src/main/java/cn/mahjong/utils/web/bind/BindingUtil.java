@@ -315,6 +315,8 @@ public class BindingUtil {
 					fieldClass = Short.class;
 				}
 				dataBinder.registerCustomEditor(fieldClass, propertyName, new CustomNumberEditor(fieldClass, true));
+			}else if (Enum.class.isAssignableFrom(fieldClass)) {
+				dataBinder.registerCustomEditor(fieldClass, propertyName, new CustomEnumEditor(fieldClass, true));
 			}
 			else if (BaseObject.class.isAssignableFrom(fieldClass)) {
 				if (!fieldClass.isInterface()) {

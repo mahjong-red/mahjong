@@ -21,7 +21,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService ,Use
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = loadByUserName(username);
 		if (user == null) {
-			return null;
+			throw new UsernameNotFoundException("用户不存在");
 		}
 		//TODO 管理员登陆成功，添加登陆日志
 		System.out.println("--------------------------");
