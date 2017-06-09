@@ -1,12 +1,23 @@
 package cn.mahjong.model.sys.role.impl;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Proxy;
 
 import cn.mahjong.model.base.impl.BmoImpl;
+import cn.mahjong.model.sys.resource.Resource;
+import cn.mahjong.model.sys.resource.impl.ResourceImpl;
 import cn.mahjong.model.sys.role.Role;
 
 @Entity
@@ -25,8 +36,18 @@ public class RoleImpl extends BmoImpl implements Role {
 	/**
 	 * 排序
 	 */
-	@Column(name = "code", length = 64 , unique=true)
+	@Column(name = "code", length = 64, unique = true)
 	private String code;
+
+	/**
+	 * 资源
+	 */
+	@ManyToMany(fetch = FetchType.LAZY, targetEntity = ResourceImpl.class)
+	@Cascade(value = {CascadeType.SAVE_UPDATE, CascadeType.DELETE})
+	@JoinTable(name = "sys_resource_role", 
+		inverseJoinColumns = {@JoinColumn(referencedColumnName = "id", name = "resource_id", nullable = false)}, 
+		joinColumns = {@JoinColumn(referencedColumnName = "id", name = "role_id", nullable = false)})
+	private Set<Resource> resourceSet = new HashSet<Resource>();
 
 	public String getName() {
 		return name;
@@ -44,5 +65,4 @@ public class RoleImpl extends BmoImpl implements Role {
 		this.code = code;
 	}
 
-	
 }

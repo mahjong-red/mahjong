@@ -60,8 +60,11 @@
 				return $(this).form('enableValidation').form('validate');
 			},
 			success:function(data){
-				//var data = eval('(' + data + ')');
-				alert(data)
+				var data = eval('(' + data + ')');
+				if(data.code == '0'){
+					$('#userlistWindow').dialog('open');
+					$('#UserCreateForm').form("reset");
+				}
 		    }
 		});
 	}

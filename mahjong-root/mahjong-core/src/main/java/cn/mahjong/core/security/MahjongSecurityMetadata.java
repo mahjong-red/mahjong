@@ -48,15 +48,12 @@ public class MahjongSecurityMetadata implements FilterInvocationSecurityMetadata
 		if (url.indexOf("?") != -1) {
 			url = StringUtils.substringBefore(url, "?");
 		}
-		return RESOURCES.get(url);
-//		for (String r : RESOURCES.keySet()) {
-//			// 匹配当前URL是否存在
-//			if (urlMatcher.match(r, url)) {
-//				return RESOURCES.get(r);
-//			}
-//		}
-//
-//		return null;
+		Collection<ConfigAttribute> result = RESOURCES.get(url);
+		if (result == null) {
+			result = new ArrayList<ConfigAttribute>();
+			result.add(new SecurityConfig("ROLE_NO_USER"));
+		}
+		return result;
 	}
 
 	@Override

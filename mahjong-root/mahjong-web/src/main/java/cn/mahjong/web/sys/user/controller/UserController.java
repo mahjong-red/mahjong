@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.mahjong.core.sys.user.UserService;
 import cn.mahjong.dto.RestResp;
-import cn.mahjong.model.base.BaseObject;
 import cn.mahjong.model.base.impl.BaseObjectImpl;
 import cn.mahjong.model.sys.user.User;
 import cn.mahjong.model.sys.user.impl.UserImpl;

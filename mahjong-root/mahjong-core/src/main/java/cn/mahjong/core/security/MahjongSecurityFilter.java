@@ -29,7 +29,6 @@ public class MahjongSecurityFilter extends AbstractSecurityInterceptor implement
 	 */
 	@Override
 	public void destroy() {
-		
 	}
 
 	/**
@@ -53,8 +52,15 @@ public class MahjongSecurityFilter extends AbstractSecurityInterceptor implement
 			
 			fi.getChain().doFilter(fi.getRequest(), fi.getResponse());
 		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AccessDeniedException(ACCESS_DENIED); 
+			
+			if (e instanceof IllegalArgumentException){
+				throw new AccessDeniedException(ACCESS_DENIED);
+			}
+			
+			throw new RuntimeException(e);
+			
+//			e.printStackTrace();
+//			throw new AccessDeniedException(ACCESS_DENIED);
 		} finally {
             super.afterInvocation(token, null);  
         }  

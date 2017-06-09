@@ -60,7 +60,7 @@ public class ResourceImpl extends BmoImpl implements Resource {
 	private String iconCls;
 
 	/**
-	 * 状态
+	 * 类型
 	 */
 	@Column(name = "resource_type", nullable = false, length = 1)
 	@Type(type = "cn.mahjong.enums.persist.PersistEnumType", parameters = {@Parameter(name = "enumClass", value = "cn.mahjong.enums.persist.ResourceType")})
@@ -71,7 +71,9 @@ public class ResourceImpl extends BmoImpl implements Resource {
 	 */
 	@ManyToMany(fetch = FetchType.LAZY, targetEntity = RoleImpl.class)
 	@Cascade(value = {CascadeType.SAVE_UPDATE, CascadeType.DELETE})
-	@JoinTable(name = "sys_resource_role", joinColumns = {@JoinColumn(referencedColumnName = "id", name = "resource_id", nullable = false)}, inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false)})
+	@JoinTable(name = "sys_resource_role", 
+		joinColumns = {@JoinColumn(referencedColumnName = "id", name = "resource_id", nullable = false)}, 
+		inverseJoinColumns = {@JoinColumn(referencedColumnName = "id", name = "role_id",  nullable = false)})
 	private Set<Role> roleSet = new HashSet<Role>();
 
 	/**
