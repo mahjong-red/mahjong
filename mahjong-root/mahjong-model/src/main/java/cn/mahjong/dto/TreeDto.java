@@ -42,8 +42,11 @@ public class TreeDto {
 		this.attributes = new HashMap<String, String>();
 		attributes.put("url", resource.getUrl());
 		attributes.put("parentId", resource.getParent()!=null?String.valueOf(resource.getParent().getId()):null);
+		attributes.put("parentName", resource.getParent()!=null?resource.getParent().getName():null);
 		attributes.put("sequence", resource.getSequence());
-		attributes.put("resourceType", resource.getResourceType().getDescription());
+		attributes.put("resourceType", resource.getResourceType().getVal().toString());
+		attributes.put("resourceTypeName", resource.getResourceType().getDescription());
+		
 		if (!CollectionUtils.isEmpty(resource.getChildren())) {
 			children = new ArrayList<TreeDto>(resource.getChildren().size());
 			for (Resource item : resource.getChildren()) {

@@ -1,4 +1,4 @@
-package cn.mahjong.utils.web.bind;
+package cn.mahjong.web.bind;
 
 import java.beans.PropertyEditorSupport;
 

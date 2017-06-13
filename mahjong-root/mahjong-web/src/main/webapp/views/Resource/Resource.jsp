@@ -22,10 +22,10 @@
 	</div>
 </div>
 <div id="resourceTreeContextMenu" class="easyui-menu" style="width:150px;">
-    <div data-options="iconCls:'icon-add'" onclick="addResourceTreeNode(false)">添加节点</div>
-    <div data-options="iconCls:'icon-add'" onclick="addResourceTreeNode(true)">添加子节点</div>
-    <div data-options="iconCls:'icon-edit'" onclick="editResourceTreeNode()">编辑节点</div>
-    <div data-options="iconCls:'icon-remove'">删除节点</div>
+    <div data-options="iconCls:'icon-add'" onclick="addResourceTreeNode(true,'<c:url value="/Resource/Create" />')">添加节点</div>
+    <div data-options="iconCls:'icon-add'" onclick="addResourceTreeNode(false,'<c:url value="/Resource/Create" />')">添加子节点</div>
+    <div data-options="iconCls:'icon-edit'" onclick="editResourceTreeNode('<c:url value="/Resource/Update" />')">编辑节点</div>
+    <div data-options="iconCls:'icon-remove'" onclick="deleteResourceTreeNode('<c:url value="/Resource/Delete" />')">删除节点</div>
 </div>
 <div id="ResourceTreeWindow" class="easyui-dialog" title="编辑" data-options="iconCls:'icon-edit',closed:true,buttons: [{
 		text:'保存',iconCls:'icon-ok',handler:function(){ResourceEditFormsave();}}]" style="width:400px;padding:10px" >
@@ -33,8 +33,8 @@
 		<table cellpadding="5" style="width:100%">
 			<tr>
 				<td width="30%">父节点: </td>
-				<td><input class="easyui-textbox" type="text" id="ResourceEditFormParentName" value="用户管理" readonly />
-					<input type="hidden" name="id" />
+				<td><input class="easyui-textbox" type="text" id="ResourceEditFormParentName" readonly />
+					<input class="easyui-textbox" type="hidden" id="ResourceEditFormParentId" name="parent" />
 				</td>
 			</tr>
 			<tr>
@@ -45,7 +45,7 @@
 			</tr>
 			<tr>
 				<td>URL:</td>
-				<td><input class="easyui-textbox" type="text" name="url" data-options="required:true" /></td>
+				<td><input class="easyui-textbox" type="text" name="url" /></td>
 			</tr>
 			<tr>
 				<td>排序:</td>
@@ -77,7 +77,7 @@
 				row.name = element.text;
 				row.url = element.attributes.url;
 				row.sequence = element.attributes.sequence;
-				row.resourceType = element.attributes.resourceType;
+				row.resourceType = element.attributes.resourceTypeName;
 				resultData.push(row);
 			}
 		});
@@ -95,15 +95,71 @@
 	$("#ResourceEditForm tr").each(function(){
 	    $(this).find("td:first").attr('align','right');
 	})
-	addResourceTreeNode = function(b){
+	addResourceTreeNode = function(b,url){
+		$("#ResourceEditForm").form("clear");
 		if(b){
-			$("#ResourceEditFormParentName").val(resourceTreeContentMentNode.name);
-		}else{
 			var parentNode = $("#resourceTree").tree("getParent",resourceTreeContentMentNode.target);
-			if(parentNode){}
-			$("#ResourceEditFormParentName").val(resourceTreeContentMentNode.name);
+			if(parentNode){
+				$("#ResourceEditFormParentName").textbox("setValue",parentNode.text);
+				$("#ResourceEditFormParentId").textbox("setValue",parentNode.id);
+			}else{
+				$("#ResourceEditFormParentName").textbox("setValue","一级菜单");
+				$("#ResourceEditFormParentId").textbox("setValue","");
+			}
+		}else{
+			$("#ResourceEditFormParentName").textbox("setValue",resourceTreeContentMentNode.text);
+			$("#ResourceEditFormParentId").textbox("setValue",resourceTreeContentMentNode.id);
 		}
-		//alert(resourceTreeContentMentNode.text);
+		$("#ResourceEditForm").form({"url":url});
 		$("#ResourceTreeWindow").dialog("open");
+	}
+	editResourceTreeNode = function(url){
+		var data = new Object();
+		data.id = resourceTreeContentMentNode.id;
+		data.name = resourceTreeContentMentNode.text;
+		data.iconCls = resourceTreeContentMentNode.iconCls;
+		data.url = resourceTreeContentMentNode.attributes.url;
+		data.sequence = resourceTreeContentMentNode.attributes.sequence;
+		data.resourceType = resourceTreeContentMentNode.attributes.resourceType;
+		$("#ResourceEditForm").form("load",data);
+		$("#ResourceEditFormParentId").textbox("setValue",resourceTreeContentMentNode.attributes.parentId);
+		$("#ResourceEditFormParentName").textbox("setValue",resourceTreeContentMentNode.attributes.parentName);
+		$("#ResourceEditForm").form({"url":url});
+		$("#ResourceTreeWindow").dialog("open");
+	}
+	deleteResourceTreeNode = function(url){
+		$.messager.confirm({
+			title: '删除提示',
+			msg: '确定删除《'+resourceTreeContentMentNode.text+'》吗？',
+			fn: function(r){
+				if (r){
+					$.post(url,{'id':resourceTreeContentMentNode.id},function(data){
+						if(data.code == '0'){
+							$.messager.alert("提示","删除成功");
+							$("#resourceTree").tree("reload");
+						}else{
+							$.messager.alert("提示",data.msg,"error");
+						}
+					},'json');
+				}
+			}
+		});
+	}
+	ResourceEditFormsave = function(){
+		$('#ResourceEditForm').form('submit',{
+			onSubmit:function(){
+				return $(this).form('enableValidation').form('validate');
+			},
+			success:function(data){
+				data = eval('('+data+')');
+				if(data.code == "0"){
+					$.messager.alert('提示','操作成功。');
+					$("#resourceTree").tree("reload");
+					$("#ResourceTreeWindow").dialog("close");
+				}else{
+					$.messager.alert('提示','操作失败：<br />'+data.msg,'error');
+				}
+		    }
+		});
 	}
 </script>

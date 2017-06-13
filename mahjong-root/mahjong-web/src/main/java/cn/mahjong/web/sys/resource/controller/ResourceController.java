@@ -36,7 +36,7 @@ public class ResourceController extends BaseController {
 		}
 		return result;
 	}
-	
+
 	@Override
 	public Class<? extends BaseObjectImpl> getBaseObjectClass() {
 		return ResourceImpl.class;

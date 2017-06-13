@@ -1,4 +1,4 @@
-package cn.mahjong.utils.web.bind;
+package cn.mahjong.web.bind;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -33,8 +33,10 @@ import org.springframework.validation.ObjectError;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.ServletRequestDataBinder;
 
+import cn.mahjong.core.base.BaseService;
 import cn.mahjong.model.base.BaseObject;
 import cn.mahjong.model.base.impl.BaseObjectImpl;
+import cn.mahjong.utils.SpringContextUtil;
 import cn.mahjong.utils.search.PageQuery;
 import cn.mahjong.utils.search.SearchType;
 
@@ -247,11 +249,9 @@ public class BindingUtil {
 		for (Entry<String , Object> entry : parameterMap.entrySet()) {
 			String key = entry.getKey();
 			String[] values = (String[]) entry.getValue();
-			
-			if (StringUtils.equals("id", key)) {
+			if (values.length == 1 && StringUtils.isEmpty(values[0])) {
 				continue;
 			}
-
 			mpvs.addPropertyValue(key, StringUtils.join(values, ","));
 		}
 	}
@@ -260,16 +260,14 @@ public class BindingUtil {
 		for (Entry<String , Object> entry : requestParamaterMap.entrySet()) {
 			String key = entry.getKey();
 			String value = (String) entry.getValue();
-			
-			if (StringUtils.equals("id", key)) {
+			if (StringUtils.isBlank(value)) {
 				continue;
 			}
-
 			mpvs.addPropertyValue(key, value);
 		}
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked", "unused" })
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public static void bindObject(BaseObject baseObject, MutablePropertyValues mpvs, Validator validator) {
 		List<PropertyValue> propertyValueList = mpvs.getPropertyValueList();
 		DataBinder dataBinder = new DataBinder(baseObject);
@@ -280,7 +278,7 @@ public class BindingUtil {
 			Class targetObjectClass = HibernateProxyHelper.getClassWithoutInitializingProxy(baseObject);
 			
 			Field field = ReflectionUtils.findField(targetObjectClass, property.getName());
-			if (field == null) {
+			if (field == null || property.getValue() == null ||property.getValue().toString().equals("")) {
 				continue;
 			}
 			
@@ -320,10 +318,11 @@ public class BindingUtil {
 			}
 			else if (BaseObject.class.isAssignableFrom(fieldClass)) {
 				if (!fieldClass.isInterface()) {
-					//dataBinder.registerCustomEditor(fieldClass, field.getName(), new AniuBussinessObjectEdit(fieldClass, (BaseService) SpringContextUtil.getBean("baseService")));
+					dataBinder.registerCustomEditor(fieldClass, field.getName(), new MahjongBussinessObjectEditor(fieldClass, (BaseService) SpringContextUtil.getBean("baseService")));
 				}
 				else {
-					String className = fieldClass.getName() + "Impl";
+					int i = fieldClass.getName().lastIndexOf(".");
+					String className = fieldClass.getName().substring(0, i) + ".impl" + fieldClass.getName().substring(i) + "Impl";
 					Class<? extends BaseObjectImpl> clazz = null;
 					try {
 						clazz = (Class<? extends BaseObjectImpl>) Class.forName(className);
@@ -331,7 +330,7 @@ public class BindingUtil {
 					catch (ClassNotFoundException e) {
 						new RuntimeException("Class not found:" + className, e);
 					}
-					//dataBinder.registerCustomEditor(fieldClass, field.getName(), new AniuBussinessObjectEdit(clazz, (BaseService) SpringContextUtil.getBean("baseService")));
+					dataBinder.registerCustomEditor(fieldClass, field.getName(), new MahjongBussinessObjectEditor(clazz, (BaseService) SpringContextUtil.getBean("baseService")));
 				}
 			}
 			else if (Collection.class.isAssignableFrom(fieldClass)) {
@@ -340,7 +339,8 @@ public class BindingUtil {
 					ParameterizedType pt = (ParameterizedType) fieldGenericType;
 					Class targetClass = (Class)pt.getActualTypeArguments()[0];
 					if (targetClass.isInterface()) {
-						String className = targetClass.getName() + "Impl";
+						int i = targetClass.getName().lastIndexOf(".");
+						String className = targetClass.getName().substring(0, i) + ".impl" + targetClass.getName().substring(i) + "Impl";
 						try {
 							targetClass = Class.forName(className);
 						}
@@ -348,16 +348,7 @@ public class BindingUtil {
 							new RuntimeException("Class not found:" + className, e);
 						}
 					}
-					
-					if (property.getValue() instanceof String) {
-						String value = (String) property.getValue();
-						if (isJsonString(value)) {
-							//dataBinder.registerCustomEditor(fieldClass, field.getName(), new AniuCollectionJsonEdit(fieldClass, targetClass, (BaseService) SpringContextUtil.getBean("baseService")));
-						}
-						else {
-							//dataBinder.registerCustomEditor(fieldClass, field.getName(), new AniuCollectionStringArrayEdit(fieldClass, targetClass, (BaseService) SpringContextUtil.getBean("baseService")));
-						}
-					}
+					dataBinder.registerCustomEditor(fieldClass, field.getName(), new MahjongCollectionStringArrayEditor(fieldClass, targetClass, (BaseService) SpringContextUtil.getBean("baseService")));
 				}
 			}
 		}
@@ -378,16 +369,6 @@ public class BindingUtil {
 			throw new RuntimeException(errorMessage);
 		}
 		
-	}
-	
-	private static boolean isJsonString(String value) {
-		if ((StringUtils.startsWith(value, "{") && StringUtils.endsWith(value, "}"))
-			||(StringUtils.startsWith(value, "[") && StringUtils.endsWith(value, "]"))){
-			return true;
-		}
-		else {
-			return false;
-		}
 	}
 	
 	@SuppressWarnings("rawtypes")

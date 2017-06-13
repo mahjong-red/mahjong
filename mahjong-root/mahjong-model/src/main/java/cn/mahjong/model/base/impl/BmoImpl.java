@@ -71,4 +71,20 @@ public class BmoImpl extends BaseObjectImpl implements Bmo {
 	public void setIsDelete(Boolean isDelete) {
 		this.isDelete = isDelete;
 	}
+
+	public User getCreateUser() {
+		return createUser;
+	}
+
+	public void setCreateUser(User createUser) {
+		this.createUser = createUser;
+	}
+
+	public User getUpdateUser() {
+		return updateUser;
+	}
+
+	public void setUpdateUser(User updateUser) {
+		this.updateUser = updateUser;
+	}
 }

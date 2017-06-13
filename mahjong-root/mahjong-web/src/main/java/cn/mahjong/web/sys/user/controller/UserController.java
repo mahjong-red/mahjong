@@ -1,5 +1,6 @@
 package cn.mahjong.web.sys.user.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,15 +14,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import cn.mahjong.core.security.SecurityHelp;
 import cn.mahjong.core.sys.user.UserService;
 import cn.mahjong.dto.RestResp;
+import cn.mahjong.model.base.BaseObject;
+import cn.mahjong.model.base.Bmo;
 import cn.mahjong.model.base.impl.BaseObjectImpl;
+import cn.mahjong.model.base.impl.BmoImpl;
 import cn.mahjong.model.sys.user.User;
 import cn.mahjong.model.sys.user.impl.UserImpl;
 import cn.mahjong.utils.search.PageData;
 import cn.mahjong.utils.search.PageQuery;
-import cn.mahjong.utils.web.bind.BindingUtil;
 import cn.mahjong.web.base.controller.BaseController;
+import cn.mahjong.web.bind.BindingUtil;
 import cn.mahjong.web.sys.user.UserDto;
 
 @Controller
@@ -47,9 +52,9 @@ public class UserController extends BaseController {
 		return UserImpl.class;
 	}
 	
-	@RequestMapping(value = "/CreateUser",method = RequestMethod.POST)
+	@RequestMapping(value = "/Create",method = RequestMethod.POST)
 	@ResponseBody
-	public RestResp createUser(HttpServletRequest request, HttpServletResponse response, Model model) {
+	protected RestResp create(HttpServletRequest request, HttpServletResponse response, Model model) {
 		RestResp resp = new RestResp("0","ok",null);
 		User user = new UserImpl();
 		BindingUtil.bindObject(user, request, null);
