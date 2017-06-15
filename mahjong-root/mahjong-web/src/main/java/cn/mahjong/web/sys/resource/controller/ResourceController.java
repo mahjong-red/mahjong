@@ -32,11 +32,11 @@ public class ResourceController extends BaseController {
 		List<Resource> list = resourceService.findByParent(null);
 		List<TreeDto> result = new ArrayList<TreeDto>(list.size());
 		for (Resource resource : list) {
-			result.add(new TreeDto(resource));
+			result.add(new TreeDto(resource,"open"));
 		}
 		return result;
 	}
-
+	
 	@Override
 	public Class<? extends BaseObjectImpl> getBaseObjectClass() {
 		return ResourceImpl.class;

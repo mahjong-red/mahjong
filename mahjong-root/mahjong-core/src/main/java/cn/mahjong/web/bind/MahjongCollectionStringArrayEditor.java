@@ -38,4 +38,5 @@ public class MahjongCollectionStringArrayEditor extends PropertyEditorSupport {
 			value.add(object);
 		}
 	}
+	
 }

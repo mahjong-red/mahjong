@@ -7,6 +7,7 @@ import org.apache.commons.lang.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.LockOptions;
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Order;
@@ -59,7 +60,14 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao{
 	}
 
 	public void delete(BaseObject baseObject) {
+		if (baseObject == null) {
+			return;
+		}
 		this.getHibernateTemplate().delete(baseObject);
+	}
+	
+	public void deleteBatch(List<BaseObject> list){
+		this.getHibernateTemplate().deleteAll(list);
 	}
 
 	public void deleteAll(Class<? extends BaseObjectImpl> clazz) {
@@ -95,8 +103,8 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao{
 			}
 		}
 
-		criteria.setFirstResult(pageQuery.getOffset());
-		criteria.setMaxResults(pageQuery.getLimit());
+		criteria.setFirstResult(pageQuery.getRows()*(pageQuery.getPage()-1));
+		criteria.setMaxResults(pageQuery.getRows());
 
 		String sort = StringUtils.isBlank(pageQuery.getSort()) ? "id" : pageQuery.getSort();
 
@@ -165,6 +173,18 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao{
 	@Autowired
 	public void setSessionFactoryOverride(SessionFactory sessionFactory) {
 		super.setSessionFactory(sessionFactory);
+	}
+	
+	public void deleteBatch(List<Long> idlist,Class<? extends BaseObject> c) {
+		StringUtils.join(idlist, ',');
+		StringBuilder hql = new StringBuilder("delete from ");
+		hql.append(c.getSimpleName());
+		hql.append(" where id in (");
+		hql.append(StringUtils.join(idlist, ','));
+		hql.append(")");
+		Session session = this.currentSession();
+		Query query = session.createQuery(hql.toString());
+		query.executeUpdate();
 	}
 	
 }

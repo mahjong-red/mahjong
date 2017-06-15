@@ -18,7 +18,10 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.ResultCheckStyle;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,6 +36,8 @@ import cn.mahjong.model.sys.user.User;
 @Entity
 @Table(name = "sys_user")
 @Proxy(lazy = true, proxyClass = User.class)
+@Where(clause = " is_delete=0 ")
+@SQLDelete(sql=" UPDATE sys_user SET is_delete = 1 WHERE id = ? " ,check=ResultCheckStyle.COUNT)
 public class UserImpl extends BmoImpl implements User,UserDetails {
 
 	private static final long serialVersionUID = -2797367290465806561L;
@@ -70,8 +75,9 @@ public class UserImpl extends BmoImpl implements User,UserDetails {
 	private UserStatus userStatus;
 
 	@ManyToMany(fetch = FetchType.LAZY, targetEntity = RoleImpl.class)
-	@Cascade(value = { CascadeType.SAVE_UPDATE, CascadeType.DELETE })
+	@Cascade(value = { CascadeType.SAVE_UPDATE})
 	@JoinTable(name = "sys_user_role", joinColumns = { @JoinColumn(referencedColumnName = "id", name = "user_id", nullable = false) }, inverseJoinColumns = { @JoinColumn(name = "role_id", referencedColumnName = "id", nullable = false) })
+	@Where(clause="is_delete=0")
 	private Set<Role> roleSet = new HashSet<Role>();
 	
 	public String getUsername() {

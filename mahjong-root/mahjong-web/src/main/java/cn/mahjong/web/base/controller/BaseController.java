@@ -82,9 +82,12 @@ public abstract class BaseController {
 	@ResponseBody
 	protected RestResp delete(HttpServletRequest request, HttpServletResponse response, Model model) {
 		RestResp resp = new RestResp("0","ok",null);
-		long id = Long.parseLong(request.getParameter("id"));
-		BaseObject baseObject = baseService.loadObject(baseObjectClass, id);
-		this.baseService.delete(baseObject);
+		String id = request.getParameter("id");
+		String ids[] = id.split(",");
+		for (String string : ids) {
+			BaseObject baseObject = baseService.getObject(baseObjectClass, Long.parseLong(string));
+			this.baseService.delete(baseObject);
+		}
 		return resp;
 	}
 	

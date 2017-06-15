@@ -23,6 +23,7 @@ public class ResourceDaoImpl extends BaseDaoImpl implements ResourceDao{
 		}else {
 			criteria.add(Restrictions.isNull("parent"));
 		}
+		criteria.add(Restrictions.eq("isDelete", false));
 		criteria.addOrder(Order.asc("sequence"));
 		return criteria.list();
 	}

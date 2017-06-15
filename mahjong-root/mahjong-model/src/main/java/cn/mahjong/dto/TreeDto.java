@@ -35,23 +35,26 @@ public class TreeDto {
 		this.checked = checked;
 	}
 
-	public TreeDto(Resource resource) {
+	public TreeDto(Resource resource,String state) {
 		this.id = resource.getId();
 		this.iconCls = resource.getIconCls();
 		this.text = resource.getName();
+		this.state = state;
 		this.attributes = new HashMap<String, String>();
 		attributes.put("url", resource.getUrl());
 		attributes.put("parentId", resource.getParent()!=null?String.valueOf(resource.getParent().getId()):null);
 		attributes.put("parentName", resource.getParent()!=null?resource.getParent().getName():null);
-		attributes.put("sequence", resource.getSequence());
+		attributes.put("sequence", String.valueOf(resource.getSequence()));
 		attributes.put("resourceType", resource.getResourceType().getVal().toString());
 		attributes.put("resourceTypeName", resource.getResourceType().getDescription());
 		
 		if (!CollectionUtils.isEmpty(resource.getChildren())) {
 			children = new ArrayList<TreeDto>(resource.getChildren().size());
 			for (Resource item : resource.getChildren()) {
-				children.add(new TreeDto(item));
+				children.add(new TreeDto(item,"closed"));
 			}
+		}else {
+			this.state = null;
 		}
 	}
 	

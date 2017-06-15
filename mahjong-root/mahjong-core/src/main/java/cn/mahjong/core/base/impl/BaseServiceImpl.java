@@ -67,6 +67,14 @@ public class BaseServiceImpl implements BaseService {
 	public void delete(BaseObject object) {
 		baseDao.delete(object);
 	}
+	
+	public void deleteBatch(List<BaseObject> list) {
+		baseDao.deleteBatch(list);
+	}
+
+	public void deleteBatch(List<Long> idlist,Class<? extends BaseObject> c) {
+		baseDao.deleteBatch(idlist, c);
+	}
 
 	public void deleteAll(Class<? extends BaseObjectImpl> clazz) {
 		baseDao.deleteAll(clazz);

@@ -661,7 +661,7 @@ public class DataGridTag extends TagSupport {
 		if(toolBarList.size()>0)
 		{
 			for (DataGridUrl toolBar : toolBarList) {
-				sb.append("<a href=\"#\" class=\"easyui-linkbutton\" plain=\"true\" icon=\""+toolBar.getIcon()+"\" ");
+				sb.append("<a href=\"#\" class=\"easyui-linkbutton\" plain=\"true\" url=\""+toolBar.getUrl()+"\" icon=\""+toolBar.getIcon()+"\" ");
 				if(StringUtils.isNotEmpty(toolBar.getOnclick()))
 				{
 					sb.append("onclick="+toolBar.getOnclick()+"");

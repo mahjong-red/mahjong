@@ -45,4 +45,8 @@ public interface BaseDao {
 	public void refresh(BaseObject baseObject);
 	
 	public void merge(BaseObject baseObject);
+	
+	public void deleteBatch(List<BaseObject> list);
+	
+	public void deleteBatch(List<Long> idlist,Class<? extends BaseObject> c);
 }

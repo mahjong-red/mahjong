@@ -20,7 +20,10 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.ResultCheckStyle;
+import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.Where;
 
 import cn.mahjong.enums.persist.ResourceType;
 import cn.mahjong.model.base.impl.BmoImpl;
@@ -31,6 +34,8 @@ import cn.mahjong.model.sys.role.impl.RoleImpl;
 @Entity
 @Table(name = "sys_resource")
 @Proxy(lazy = true, proxyClass = Resource.class)
+@Where(clause = " is_delete=0 ")
+@SQLDelete(sql=" UPDATE sys_resource SET is_delete = 1 WHERE id = ? " ,check=ResultCheckStyle.COUNT)
 public class ResourceImpl extends BmoImpl implements Resource {
 
 	private static final long serialVersionUID = -3752135427372331139L;
@@ -50,8 +55,8 @@ public class ResourceImpl extends BmoImpl implements Resource {
 	/**
 	 * 排序
 	 */
-	@Column(name = "sequence", length = 64)
-	private String sequence;
+	@Column(name = "sequence",nullable=true)
+	private int sequence = 1;
 	
 	/**
 	 * 显示图标
@@ -70,10 +75,11 @@ public class ResourceImpl extends BmoImpl implements Resource {
 	 * 角色
 	 */
 	@ManyToMany(fetch = FetchType.LAZY, targetEntity = RoleImpl.class)
-	@Cascade(value = {CascadeType.SAVE_UPDATE, CascadeType.DELETE})
+	@Cascade(value = {CascadeType.SAVE_UPDATE})
 	@JoinTable(name = "sys_resource_role", 
 		joinColumns = {@JoinColumn(referencedColumnName = "id", name = "resource_id", nullable = false)}, 
 		inverseJoinColumns = {@JoinColumn(referencedColumnName = "id", name = "role_id",  nullable = false)})
+	@Where(clause="is_delete=0")
 	private Set<Role> roleSet = new HashSet<Role>();
 
 	/**
@@ -90,6 +96,7 @@ public class ResourceImpl extends BmoImpl implements Resource {
 	@OneToMany(targetEntity = ResourceImpl.class, mappedBy = "parent", fetch = FetchType.LAZY)
 	@Cascade(value = {CascadeType.SAVE_UPDATE, CascadeType.DELETE})
 	@OrderBy("sequence asc")
+	@Where(clause="is_delete=0")
 	private List<Resource> children = new ArrayList<Resource>();
 
 	public String getName() {
@@ -108,11 +115,11 @@ public class ResourceImpl extends BmoImpl implements Resource {
 		this.url = url;
 	}
 
-	public String getSequence() {
+	public int getSequence() {
 		return sequence;
 	}
 
-	public void setSequence(String sequence) {
+	public void setSequence(int sequence) {
 		this.sequence = sequence;
 	}
 

@@ -1,5 +1,11 @@
 package cn.mahjong.web.sys.user;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.springframework.util.CollectionUtils;
+
+import cn.mahjong.model.sys.role.Role;
 import cn.mahjong.model.sys.user.User;
 
 public class UserDto {
@@ -28,6 +34,30 @@ public class UserDto {
 	
 	public String getUserStatus(){
 		return target.getUserStatus().getDescription();
+	}
+	
+	public String getRoleName(){
+		if (CollectionUtils.isEmpty(target.getRoleSet())) {
+			return null;
+		}
+		StringBuilder sb = new StringBuilder();
+		for (Role role : target.getRoleSet()) {
+			sb.append(role.getName());
+			sb.append(",");
+		}
+		return sb.substring(0, sb.length()-1);
+	}
+	
+	public String getRoleVal(){
+		if (CollectionUtils.isEmpty(target.getRoleSet())) {
+			return null;
+		}
+		StringBuilder sb = new StringBuilder();
+		for (Role role : target.getRoleSet()) {
+			sb.append(role.getId());
+			sb.append(",");
+		}
+		return sb.substring(0, sb.length()-1);
 	}
 	
 }

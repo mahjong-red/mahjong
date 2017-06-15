@@ -17,9 +17,9 @@ public interface Resource extends Bmo{
 
 	public void setUrl(String url);
 
-	public String getSequence();
+	public int getSequence();
 
-	public void setSequence(String sequence);
+	public void setSequence(int sequence);
 
 	public ResourceType getResourceType();
 

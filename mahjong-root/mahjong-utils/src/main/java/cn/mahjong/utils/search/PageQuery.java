@@ -20,9 +20,9 @@ public class PageQuery {
 
 	private String targetClassStr;
 
-	private int offset = 0;
+	private int rows = 10;
 
-	private int limit = 10;
+	private int page = 1;
 
 	private Date searchDate;
 
@@ -48,22 +48,6 @@ public class PageQuery {
 
 	public void setDtoTarget(Class<?> dtoTarget) {
 		this.dtoTarget = dtoTarget;
-	}
-
-	public int getOffset() {
-		return offset;
-	}
-
-	public void setOffset(int offset) {
-		this.offset = offset;
-	}
-
-	public int getLimit() {
-		return limit;
-	}
-
-	public void setLimit(int limit) {
-		this.limit = limit;
 	}
 
 	public Date getSearchDate() {
@@ -121,6 +105,22 @@ public class PageQuery {
 		searchItem.setValue1(value1);
 		searchItem.setValue2(value2);
 		searchIteams.add(searchItem);
+	}
+
+	public int getRows() {
+		return rows;
+	}
+
+	public void setRows(int rows) {
+		this.rows = rows;
+	}
+
+	public int getPage() {
+		return page;
+	}
+
+	public void setPage(int page) {
+		this.page = page;
 	}
 
 }

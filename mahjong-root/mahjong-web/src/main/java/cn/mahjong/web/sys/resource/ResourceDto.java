@@ -27,7 +27,7 @@ public class ResourceDto {
 		return target.getUrl();
 	}
 	
-	public String getSequence(){
+	public int getSequence(){
 		return target.getSequence();
 	}
 	

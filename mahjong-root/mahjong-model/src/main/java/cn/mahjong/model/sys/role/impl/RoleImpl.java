@@ -14,6 +14,9 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Proxy;
+import org.hibernate.annotations.ResultCheckStyle;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import cn.mahjong.model.base.impl.BmoImpl;
 import cn.mahjong.model.sys.resource.Resource;
@@ -23,13 +26,15 @@ import cn.mahjong.model.sys.role.Role;
 @Entity
 @Table(name = "sys_role")
 @Proxy(lazy = true, proxyClass = Role.class)
+@Where(clause = " is_delete=0 ")
+@SQLDelete(sql=" UPDATE sys_role SET is_delete = 1 WHERE id = ? " ,check=ResultCheckStyle.COUNT)
 public class RoleImpl extends BmoImpl implements Role {
 
 	private static final long serialVersionUID = -3752138427372381139L;
 
 	/**
 	 * 名称
-	 */
+	 */ 
 	@Column(name = "name", length = 64)
 	private String name;
 
@@ -43,10 +48,11 @@ public class RoleImpl extends BmoImpl implements Role {
 	 * 资源
 	 */
 	@ManyToMany(fetch = FetchType.LAZY, targetEntity = ResourceImpl.class)
-	@Cascade(value = {CascadeType.SAVE_UPDATE, CascadeType.DELETE})
+	@Cascade(value = {CascadeType.SAVE_UPDATE})
 	@JoinTable(name = "sys_resource_role", 
 		inverseJoinColumns = {@JoinColumn(referencedColumnName = "id", name = "resource_id", nullable = false)}, 
 		joinColumns = {@JoinColumn(referencedColumnName = "id", name = "role_id", nullable = false)})
+	@Where(clause="is_delete=0")
 	private Set<Resource> resourceSet = new HashSet<Resource>();
 
 	public String getName() {
@@ -63,6 +69,14 @@ public class RoleImpl extends BmoImpl implements Role {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public Set<Resource> getResourceSet() {
+		return resourceSet;
+	}
+
+	public void setResourceSet(Set<Resource> resourceSet) {
+		this.resourceSet = resourceSet;
 	}
 
 }

@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="t" uri="/easyui-tags"%>
+<c:set var="ctx" value="${pageContext.request.contextPath}" />
 <t:datagrid name="userlist" checkbox="true" actionUrl="User/Find"
 	fit="true" fitColumns="false" idField="id" queryMode="group">
 	<t:dgCol title="编号" field="id" hidden="false"></t:dgCol>
@@ -9,30 +10,31 @@
 	<t:dgCol title="昵称" field="nickname" query="true"></t:dgCol>
 	<t:dgCol title="性别" field="sex"></t:dgCol>
 	<t:dgCol title="状态" field="userStatus"></t:dgCol>
+	<t:dgCol title="角色" field="roleName"></t:dgCol>
 	<t:dgDelOpt title="删除" url="textTemplateController.do?del&id={id}" />
-	<t:dgToolBar title="文本录入" icon="icon-add" url="User/Create" onclick="$('#userlistWindow').dialog('open');"></t:dgToolBar>
-	<t:dgToolBar title="文本编辑" icon="icon-edit" url="textTemplateController.do?addorUpdate" funname="update"></t:dgToolBar>
-	<t:dgToolBar title="批量删除" icon="icon-remove" url="textTemplateController.do?doBatchDel" funname="deleteALLSelect"></t:dgToolBar>
+	<t:dgToolBar title="文本录入" icon="icon-add" onclick="userlistCreate('${ctx}/User/Create')"></t:dgToolBar>
+	<t:dgToolBar title="文本编辑" icon="icon-edit" onclick="userlistUpdate('${ctx}/User/Update')"></t:dgToolBar>
+	<t:dgToolBar title="批量删除" icon="icon-remove" onclick="userlistDelete('${ctx}/User/Delete')"></t:dgToolBar>
 </t:datagrid>
 <div id="userlistWindow" class="easyui-dialog" title="编辑" data-options="iconCls:'icon-edit',closed:true,buttons: [{
-		text:'保存',iconCls:'icon-ok',handler:function(){save();}}]" style="width:400px;padding:10px" >
-	<form id="UserCreateForm" method="post" class="easyui-form" action="<c:url value="/User/CreateUser" />" >
+		text:'保存',iconCls:'icon-ok',handler:function(){UserCreateFormSave();}}]" style="width:400px;padding:10px" >
+	<form id="UserCreateForm" method="post" class="easyui-form" action="<c:url value="/User/Create" />" >
 		<table cellpadding="5">
 			<tr>
 				<td width="30%">用户名: </td>
-				<td><input class="easyui-textbox" type="text" name="username"
+				<td><input class="easyui-textbox" type="text" name="username" autocomplete="off"
 					data-options="required:true,validType:'length[2,20]',invalidMessage:'用户名长度为2~20.'"></input>
 					<input type="hidden" name="id" />
 				</td>
 			</tr>
 			<tr>
 				<td>昵称:</td>
-				<td><input class="easyui-textbox" type="text" name="nickname"
+				<td><input class="easyui-textbox" type="text" name="nickname" autocomplete="off"
 					data-options="required:true,validType:'length[2,10]',invalidMessage:'昵称长度为2~10.'"></input></td>
 			</tr>
 			<tr>
 				<td>密码:</td>
-				<td><input class="easyui-textbox" type="password" name="password"
+				<td><input class="easyui-textbox" type="password" id="UserCreateFormPassword" name="password" autocomplete="off"
 					data-options="required:true,validType:'length[6,20]'"></input></td>
 			</tr>
 			<tr>
@@ -47,6 +49,16 @@
 					css="easyui-combobox" defaultVal="1" dataOptions="panelHeight:'auto',required:true,invalidMessage:'请选择状态',editable:false,validType:'comboxValidate(UserCreateFormUserStatus)'" ></t:enumSelectTag>
 				</td>
 			</tr>
+			<tr>
+				<td>权限:</td>
+				<td>
+					<select class="easyui-combobox" id="UserCreateFormRoleSet" name="roleSet" data-options="multiple:true,panelHeight:'auto'" >
+						<c:forEach items="${roleList }" var="item">
+							<option value="${item.id }">${item.name }</option>
+						</c:forEach>
+					</select>
+				</td>
+			</tr>
 		</table>
 	</form>
 </div>
@@ -54,7 +66,7 @@
 	$("#UserCreateForm tr").each(function(){
 	    $(this).find("td:first").attr('align','right');
 	})
-	save = function(){
+	UserCreateFormSave = function(){
 		$('#UserCreateForm').form('submit',{
 			onSubmit:function(){
 				return $(this).form('enableValidation').form('validate');
@@ -62,10 +74,56 @@
 			success:function(data){
 				var data = eval('(' + data + ')');
 				if(data.code == '0'){
-					$('#userlistWindow').dialog('open');
+					$('#userlistWindow').dialog('close');
 					$('#UserCreateForm').form("reset");
 				}
 		    }
 		});
+	}
+	userlistCreate = function(url){
+		$("#UserCreateForm").form({"url":url});
+		$('#userlistWindow').dialog('open');
+		$("#UserCreateForm").form("clear");
+	}
+	userlistUpdate = function(url){
+		var selectedRow = $('#userlist').datagrid("getSelected");
+		if(selectedRow != null){
+			userlistCreate(url);
+			$("#UserCreateFormPassword").textbox("disableValidation");//将密码字段置空
+			$("#UserCreateForm").form("load",selectedRow);
+			$("#UserCreateFormRoleSet").combobox("setValues",selectedRow.roleVal.split(","));
+		}else{
+			$.messager.alert('提示','请选择一行。','error');
+		}
+	}
+	userlistDelete = function(url){
+		var selectedRows= $('#userlist').datagrid("getSelections");
+		if(selectedRows.length == 0){
+			$.messager.alert('提示','请至少选择一行。','error');
+		}else{
+			var ids = '';
+			$.each(selectedRows,function(i,item){
+				if(item){
+					ids += item.id;
+					ids += ",";
+				}
+			});
+			$.messager.confirm({
+				title: '删除提示',
+				msg: '确定删除吗？',
+				fn: function(r){
+					if (r){
+						$.post(url,{'id':ids},function(data){
+							if(data.code == '0'){
+								$.messager.alert("提示","删除成功");
+								$('#userlist').datagrid("reload");
+							}else{
+								$.messager.alert("提示",data.msg,"error");
+							}
+						},'json');
+					}
+				}
+			});
+		}
 	}
 </script>
