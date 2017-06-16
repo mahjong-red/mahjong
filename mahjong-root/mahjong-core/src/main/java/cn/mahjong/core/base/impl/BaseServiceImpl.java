@@ -4,6 +4,8 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
+import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.stereotype.Service;
 
 import cn.mahjong.core.base.BaseService;
@@ -19,6 +21,8 @@ public class BaseServiceImpl implements BaseService {
 	@Autowired
 	protected BaseDao baseDao;
 
+	public MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
+	
 	public void save(BaseObject baseObject) {
 		baseDao.save(baseObject);
 	}

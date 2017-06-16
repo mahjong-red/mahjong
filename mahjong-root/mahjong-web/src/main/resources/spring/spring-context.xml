@@ -39,6 +39,7 @@
 	</bean>
 	
 	<import resource="classpath:spring/spring-hibernate.xml" />
+	<import resource="classpath:spring/spring-message.xml" />
 	<import resource="classpath:spring/spring-transaction.xml" />
 	<import resource="classpath:spring/spring-security.xml" />
 	

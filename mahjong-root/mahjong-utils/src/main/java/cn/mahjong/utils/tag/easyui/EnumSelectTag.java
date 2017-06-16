@@ -41,7 +41,7 @@ public class EnumSelectTag extends TagSupport {
 	public StringBuffer end() {
 		StringBuffer sb = new StringBuffer("<select id=");
 		sb.append(id);
-		sb.append(" name= ");
+		sb.append(" name=");
 		sb.append(name);
 		sb.append(" class=");
 		sb.append(css);
@@ -63,7 +63,7 @@ public class EnumSelectTag extends TagSupport {
 			sb.append("<option value=");
 			sb.append(val);
 			if (StringUtils.isNotBlank(defaultVal) && defaultVal.equals(String.valueOf(val))) {
-				sb.append(" selected");
+				sb.append(" selected='selected'");
 			}
 			sb.append(" >");
 			sb.append(description);

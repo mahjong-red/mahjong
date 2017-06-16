@@ -1,8 +1,5 @@
 package cn.mahjong.web.sys.user;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.springframework.util.CollectionUtils;
 
 import cn.mahjong.model.sys.role.Role;
@@ -29,10 +26,18 @@ public class UserDto {
 	}
 	
 	public String getSex(){
+		return String.valueOf(target.getSex().getVal());
+	}
+	
+	public String getSexText(){
 		return target.getSex().getDescription();
 	}
 	
 	public String getUserStatus(){
+		return String.valueOf(target.getUserStatus().getVal());
+	}
+	
+	public String getUserStatusText(){
 		return target.getUserStatus().getDescription();
 	}
 	

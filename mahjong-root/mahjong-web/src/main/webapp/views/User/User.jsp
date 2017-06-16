@@ -8,12 +8,12 @@
 	<t:dgCol title="编号" field="id" hidden="false"></t:dgCol>
 	<t:dgCol title="用户名" field="username" query="true" ></t:dgCol>
 	<t:dgCol title="昵称" field="nickname" query="true"></t:dgCol>
-	<t:dgCol title="性别" field="sex"></t:dgCol>
-	<t:dgCol title="状态" field="userStatus"></t:dgCol>
+	<t:dgCol title="性别" field="sexText"></t:dgCol>
+	<t:dgCol title="状态" field="userStatusText"></t:dgCol>
 	<t:dgCol title="角色" field="roleName"></t:dgCol>
 	<t:dgDelOpt title="删除" url="textTemplateController.do?del&id={id}" />
-	<t:dgToolBar title="文本录入" icon="icon-add" onclick="userlistCreate('${ctx}/User/Create')"></t:dgToolBar>
-	<t:dgToolBar title="文本编辑" icon="icon-edit" onclick="userlistUpdate('${ctx}/User/Update')"></t:dgToolBar>
+	<t:dgToolBar title="新增用户" icon="icon-add" onclick="userlistCreate('${ctx}/User/Create')"></t:dgToolBar>
+	<t:dgToolBar title="编辑用户" icon="icon-edit" onclick="userlistUpdate('${ctx}/User/Update')"></t:dgToolBar>
 	<t:dgToolBar title="批量删除" icon="icon-remove" onclick="userlistDelete('${ctx}/User/Delete')"></t:dgToolBar>
 </t:datagrid>
 <div id="userlistWindow" class="easyui-dialog" title="编辑" data-options="iconCls:'icon-edit',closed:true,buttons: [{
@@ -76,12 +76,16 @@
 				if(data.code == '0'){
 					$('#userlistWindow').dialog('close');
 					$('#UserCreateForm').form("reset");
+					$('#userlist').datagrid("reload");
+				}else{
+					$.messager.alert('提示','操作失败！<br />'+data.msg,'error');
 				}
 		    }
 		});
 	}
 	userlistCreate = function(url){
 		$("#UserCreateForm").form({"url":url});
+		$("#UserCreateFormPassword").textbox({'required':false});
 		$('#userlistWindow').dialog('open');
 		$("#UserCreateForm").form("clear");
 	}
@@ -89,7 +93,8 @@
 		var selectedRow = $('#userlist').datagrid("getSelected");
 		if(selectedRow != null){
 			userlistCreate(url);
-			$("#UserCreateFormPassword").textbox("disableValidation");//将密码字段置空
+			$("#UserCreateFormPassword").textbox({'required':false});//将密码字段置空
+			console.info(selectedRow);
 			$("#UserCreateForm").form("load",selectedRow);
 			$("#UserCreateFormRoleSet").combobox("setValues",selectedRow.roleVal.split(","));
 		}else{

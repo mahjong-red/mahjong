@@ -19,10 +19,7 @@ import cn.mahjong.core.security.SecurityHelp;
 import cn.mahjong.core.sys.role.RoleService;
 import cn.mahjong.core.sys.user.UserService;
 import cn.mahjong.dto.RestResp;
-import cn.mahjong.model.base.BaseObject;
-import cn.mahjong.model.base.Bmo;
 import cn.mahjong.model.base.impl.BaseObjectImpl;
-import cn.mahjong.model.base.impl.BmoImpl;
 import cn.mahjong.model.sys.role.impl.RoleImpl;
 import cn.mahjong.model.sys.user.User;
 import cn.mahjong.model.sys.user.impl.UserImpl;
@@ -70,15 +67,21 @@ public class UserController extends BaseController {
 		RestResp resp = new RestResp("0","ok",null);
 		User user = new UserImpl();
 		BindingUtil.bindObject(user, request, null);
-		Md5PasswordEncoder encoder = new Md5PasswordEncoder();
-		user.setPassword(encoder.encodePassword(user.getPassword(), user.getUsername()));
-		Date now = new Date();
-		User user1 = SecurityHelp.getCurrentUser();
-		user.setCreateDate(now);
-		user.setUpdateDate(now);
-		user.setCreateUser(user1);
-		user.setUpdateUser(user1);
-		userService.save(user);
+		if (StringUtils.isNotEmpty(user.getPassword()) && user.getPassword().length() > 5) {
+			Md5PasswordEncoder encoder = new Md5PasswordEncoder();
+			user.setPassword(encoder.encodePassword(user.getPassword(), user.getUsername()));
+			Date now = new Date();
+			User user1 = SecurityHelp.getCurrentUser();
+			user.setCreateDate(now);
+			user.setUpdateDate(now);
+			user.setCreateUser(user1);
+			user.setUpdateUser(user1);
+			userService.save(user);
+		}else{
+			resp.setCode("1");
+			resp.setMsg("密码至少6位，请重新输入。");
+			return resp;
+		}
 		return resp;
 	}
 	

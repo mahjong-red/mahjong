@@ -33,10 +33,12 @@
 			</tr>
 			<tr>
 				<td >资源:</td>
-				<td style="border:#999 1px solid;">
+				<td>
+					<input class="easyui-combotree" id="RoleCreateFormResourceTree" data-options="url:'<c:url value="/Resource/LoadTree" />',
+					method:'get',multiple:true,checkbox:true,panelHeight:'auto'" style="width:100%">
 					<input class="easyui-textbox" name="resourceSet" id="RoleCreateFormResourceSet" type="hidden" >
-					<ul class="easyui-tree" id="RoleCreateFormResourceTree"
-						 data-options="url:'<c:url value="/Resource/LoadTree" />',checkbox:true" ></ul>
+					<%-- <ul class="easyui-tree" id="RoleCreateFormResourceTree"
+						 data-options="url:'<c:url value="/Resource/LoadTree" />',checkbox:true" ></ul> --%>
 				</td>
 			</tr>
 		</table>
@@ -47,8 +49,10 @@
 	    $(this).find("td:first").attr('align','right');
 	})
 	RoleCreateFormSave = function(){
+		var t = $("#RoleCreateFormResourceTree").combotree('tree');
+		var n = t.tree('getChecked',  ['checked','indeterminate']);
 		var ids = '';
-		$.each($("#RoleCreateFormResourceTree").tree('getChecked',  ['checked','indeterminate']),function(i,item){
+		$.each(n,function(i,item){
 			ids += item.id + ",";
 		});
 		$("#RoleCreateFormResourceSet").textbox("setValue",ids);
@@ -70,8 +74,9 @@
 	}
 	rolelistWindowOpen = function(){
 		$("#RoleCreateForm").form("clear");
-		$.each($("#RoleCreateFormResourceTree").tree('getChecked', ['checked']),function(i,item){
-			$("#RoleCreateFormResourceTree").tree("uncheck",item.target);
+		var tree = $("#RoleCreateFormResourceTree").combotree('tree');
+		$.each(tree.tree('getChecked', ['checked']),function(i,item){
+			tree.tree("uncheck",item.target);
 		})
 		$("#rolelistWindow").dialog("open");
 	}
@@ -99,7 +104,7 @@
 						$.post(url,{'id':ids},function(data){
 							if(data.code == '0'){
 								$.messager.alert("提示","删除成功");
-								$("#resourceTree").tree("reload");
+								$('#rolelist').datagrid("reload");
 							}else{
 								$.messager.alert("提示",data.msg,"error");
 							}
@@ -127,9 +132,10 @@
 			console.info("------------");
 			$.each(selectedRow.resourceSet.split(","),function(i,item){
 				if(item){
-					var node = $("#RoleCreateFormResourceTree").tree("find",item);
-					if($('#RoleCreateFormResourceTree').tree('isLeaf', node.target)){
-						$("#RoleCreateFormResourceTree").tree("check",node.target);
+					var tree = $("#RoleCreateFormResourceTree").combotree('tree');
+					var node = tree.tree("find",item);
+					if(tree.tree('isLeaf', node.target)){
+						tree.tree("check",node.target);
 					}
 				}
 			});

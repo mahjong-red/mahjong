@@ -154,7 +154,7 @@ public class UserImpl extends BmoImpl implements User,UserDetails {
 
 	@Override
 	public boolean isEnabled() {
-		return true;
+		return this.userStatus == UserStatus.ENABLE;
 	}
 
 }
