@@ -11,6 +11,7 @@
 
   <modules>
   	<module>mahjong-utils</module>
+  	<module>mahjong-model</module>
   	<module>mahjong-persist</module>
   	<module>mahjong-core</module>
   	<module>mahjong-web</module>
