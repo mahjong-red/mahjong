@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.stereotype.Service;
@@ -48,6 +49,7 @@ public class BaseServiceImpl implements BaseService {
 		baseDao.save(bmo);
 	}
 	
+	@Cacheable("BaseObject")
 	public BaseObject getObject(Class<? extends BaseObjectImpl> clazz, long id) {
 		return baseDao.getObject(clazz, id);
 	}
