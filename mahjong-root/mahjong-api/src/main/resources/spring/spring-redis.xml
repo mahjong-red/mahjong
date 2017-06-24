@@ -8,7 +8,9 @@
             http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd  
             http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
 
-	<cache:annotation-driven cache-manager="cacheManager" key-generator="" />
+	<bean id="mahjongKeyGenerator" class="cn.mahjong.core.redis.MahjongKeyGenerator" />
+	
+	<cache:annotation-driven cache-manager="cacheManager" key-generator="mahjongKeyGenerator" />
 	
 	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
 		<property name="maxIdle" value="${redis.maxIdle}" />
@@ -22,16 +24,18 @@
 		p:host-name="${redis.host}" p:port="${redis.port}"
 		p:pool-config-ref="poolConfig" />
 
-	<bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate">
+	<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
 		<property name="connectionFactory" ref="connectionFactory" />
 		<property name="defaultSerializer">
-			<bean class=" org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer">
+			<bean class="org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer">
 				<constructor-arg type="java.lang.Class" value="java.lang.Object" />
 			</bean>
 		</property>
+		<property name="hashValueSerializer" ref="redisValueSerializer" />
 	</bean>
 	
 	<bean id="cacheManager" class="org.springframework.data.redis.cache.RedisCacheManager">
 		<constructor-arg name="template" ref="redisTemplate" />
 	</bean>
+	<bean id="redisValueSerializer" class="cn.mahjong.core.redis.RedisValueSerializer" ></bean>
 </beans>  

@@ -15,7 +15,7 @@ public class MahjongKeyGenerator implements KeyGenerator{
         sb.append(":");
         for (Object obj : params) {  
             sb.append(obj.toString());  
-        }  
+        }
         return sb.toString();
 	}
 
