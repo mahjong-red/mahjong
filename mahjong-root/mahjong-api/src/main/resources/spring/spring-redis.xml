@@ -14,9 +14,8 @@
 	
 	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
 		<property name="maxIdle" value="${redis.maxIdle}" />
-		<!-- <property name="maxActive" value="${redis.maxActive}" />
-		<property name="maxWait" value="${redis.maxWait}" />
-		<property name="testOnBorrow" value="${redis.testOnBorrow}" /> -->
+		<property name="maxWaitMillis" value="${redis.maxWait}" />
+		<property name="maxTotal" value="${redis.maxTotal}" />
 	</bean>
 
 	<bean id="connectionFactory"
