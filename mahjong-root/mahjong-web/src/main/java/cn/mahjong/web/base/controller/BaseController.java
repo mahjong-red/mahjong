@@ -18,7 +18,7 @@ import cn.mahjong.model.base.BaseObject;
 import cn.mahjong.model.base.Bmo;
 import cn.mahjong.model.base.impl.BaseObjectImpl;
 import cn.mahjong.model.base.impl.BmoImpl;
-import cn.mahjong.model.sys.user.User;
+import cn.mahjong.model.sys.user.AdminUser;
 import cn.mahjong.utils.search.PageData;
 import cn.mahjong.utils.search.PageQuery;
 import cn.mahjong.web.bind.BindingUtil;
@@ -46,7 +46,7 @@ public abstract class BaseController {
 			if (baseObject instanceof BmoImpl) {
 				Bmo bmo = (BmoImpl)baseObject;
 				Date now = new Date();
-				User user = SecurityHelp.getCurrentUser();
+				AdminUser user = SecurityHelp.getCurrentUser();
 				bmo.setCreateDate(now);
 				bmo.setUpdateDate(now);
 				bmo.setCreateUser(user);
@@ -70,7 +70,7 @@ public abstract class BaseController {
 		if (baseObject instanceof BmoImpl) {
 			Bmo bmo = (BmoImpl)baseObject;
 			Date now = new Date();
-			User user = SecurityHelp.getCurrentUser();
+			AdminUser user = SecurityHelp.getCurrentUser();
 			bmo.setUpdateDate(now);
 			bmo.setUpdateUser(user);
 		}

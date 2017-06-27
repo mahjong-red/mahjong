@@ -9,7 +9,7 @@ import org.springframework.util.CollectionUtils;
 
 import cn.mahjong.model.sys.resource.Resource;
 import cn.mahjong.model.sys.role.Role;
-import cn.mahjong.model.sys.user.User;
+import cn.mahjong.model.sys.user.AdminUser;
 
 public class MenuDto {
 	
@@ -99,7 +99,7 @@ public class MenuDto {
 		return result;
 	}
 	
-	public boolean hasAuthorited(User currentUser) {
+	public boolean hasAuthorited(AdminUser currentUser) {
 		List<String> roles = new ArrayList<String>(currentUser.getRoleSet().size());
 		for (Role role : currentUser.getRoleSet()) {
 			roles.add(role.getCode());

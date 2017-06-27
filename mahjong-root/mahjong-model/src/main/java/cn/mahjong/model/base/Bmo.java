@@ -2,7 +2,7 @@ package cn.mahjong.model.base;
 
 import java.util.Date;
 
-import cn.mahjong.model.sys.user.User;
+import cn.mahjong.model.sys.user.AdminUser;
 
 public interface Bmo extends BaseObject {
 
@@ -18,12 +18,12 @@ public interface Bmo extends BaseObject {
 
 	public void setIsDelete(Boolean isDelete);
 	
-	public User getCreateUser();
+	public AdminUser getCreateUser();
 
-	public void setCreateUser(User createUser);
+	public void setCreateUser(AdminUser createUser);
 
-	public User getUpdateUser();
+	public AdminUser getUpdateUser();
 
-	public void setUpdateUser(User updateUser);
+	public void setUpdateUser(AdminUser updateUser);
 	
 }

@@ -7,22 +7,22 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
-import cn.mahjong.model.sys.user.User;
-import cn.mahjong.model.sys.user.impl.UserImpl;
+import cn.mahjong.model.sys.user.AdminUser;
+import cn.mahjong.model.sys.user.impl.AdminUserImpl;
 import cn.mahjong.persist.base.impl.BaseDaoImpl;
-import cn.mahjong.persist.sys.user.UserDao;
+import cn.mahjong.persist.sys.user.AdminUserDao;
 
-@Repository("userDao")
+@Repository("adminUserDao")
 @SuppressWarnings("unchecked")
-public class UserDaoImpl extends BaseDaoImpl implements UserDao{
+public class AdminUserDaoImpl extends BaseDaoImpl implements AdminUserDao{
 
 	@Override
-	public User loadByUsername(String username) {
-		Criteria criteria = currentCriteria(UserImpl.class);
+	public AdminUser loadByUsername(String username) {
+		Criteria criteria = currentCriteria(AdminUserImpl.class);
 		criteria.add(Restrictions.eq("username", username));
 		criteria.setMaxResults(1);
 
-		List<User> list = criteria.list();
+		List<AdminUser> list = criteria.list();
 		return CollectionUtils.isEmpty(list)?null:list.get(0);
 	}
 

@@ -81,7 +81,7 @@
     
 	<bean id="authenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
 		<property name="hideUserNotFoundExceptions" value="false" />
-		<property name="userDetailsService" ref="userService" />
+		<property name="userDetailsService" ref="adminUserService" />
 		<property name="passwordEncoder" ref="passwordEncode" />
 		<property name="saltSource" ref="saltSource" />
 	</bean>

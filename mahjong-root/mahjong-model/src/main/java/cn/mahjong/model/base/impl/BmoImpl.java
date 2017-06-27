@@ -14,8 +14,8 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
 
 import cn.mahjong.model.base.Bmo;
-import cn.mahjong.model.sys.user.User;
-import cn.mahjong.model.sys.user.impl.UserImpl;
+import cn.mahjong.model.sys.user.AdminUser;
+import cn.mahjong.model.sys.user.impl.AdminUserImpl;
 
 /**
  * 业务模型对象 所有业务模型对象的基类
@@ -35,15 +35,15 @@ public class BmoImpl extends BaseObjectImpl implements Bmo {
 	@Column(name = "update_date", nullable = true)
 	protected Date updateDate;
 
-	@ManyToOne(fetch = FetchType.LAZY, targetEntity = UserImpl.class)
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = AdminUserImpl.class)
 	@Cascade(value = { CascadeType.SAVE_UPDATE })
 	@JoinColumn(name = "create_user_id")
-	protected User createUser;
+	protected AdminUser createUser;
 	
-	@ManyToOne(fetch = FetchType.LAZY, targetEntity = UserImpl.class)
+	@ManyToOne(fetch = FetchType.LAZY, targetEntity = AdminUserImpl.class)
 	@Cascade(value = { CascadeType.SAVE_UPDATE })
 	@JoinColumn(name = "update_user_id")
-	protected User updateUser;
+	protected AdminUser updateUser;
 	
 	@Column(name="is_delete",nullable=false,columnDefinition="BIT DEFAULT FALSE")
 	protected Boolean isDelete = false;
@@ -72,19 +72,19 @@ public class BmoImpl extends BaseObjectImpl implements Bmo {
 		this.isDelete = isDelete;
 	}
 
-	public User getCreateUser() {
+	public AdminUser getCreateUser() {
 		return createUser;
 	}
 
-	public void setCreateUser(User createUser) {
+	public void setCreateUser(AdminUser createUser) {
 		this.createUser = createUser;
 	}
 
-	public User getUpdateUser() {
+	public AdminUser getUpdateUser() {
 		return updateUser;
 	}
 
-	public void setUpdateUser(User updateUser) {
+	public void setUpdateUser(AdminUser updateUser) {
 		this.updateUser = updateUser;
 	}
 }

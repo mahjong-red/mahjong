@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-	xmlns:cache="http://www.springframework.org/schema/cache"
-	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
-	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:cache="http://www.springframework.org/schema/cache" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
 	xsi:schemaLocation="  
             http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd  
             http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
 
 	<bean id="mahjongKeyGenerator" class="cn.mahjong.core.redis.MahjongKeyGenerator" />
-	
-	<cache:annotation-driven cache-manager="cacheManager" key-generator="mahjongKeyGenerator" />
-	
+
+	<cache:annotation-driven cache-manager="cacheManager"
+		key-generator="mahjongKeyGenerator" />
+
 	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
 		<property name="maxIdle" value="${redis.maxIdle}" />
 		<property name="maxWaitMillis" value="${redis.maxWait}" />
@@ -20,21 +20,37 @@
 
 	<bean id="connectionFactory"
 		class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
-		p:host-name="${redis.host}" p:port="${redis.port}"
-		p:pool-config-ref="poolConfig" />
+		p:host-name="${redis.host}" p:port="${redis.port}" p:pool-config-ref="poolConfig" />
 
 	<bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
 		<property name="connectionFactory" ref="connectionFactory" />
 		<property name="defaultSerializer">
-			<bean class="org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer">
+			<bean
+				class="org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer">
 				<constructor-arg type="java.lang.Class" value="java.lang.Object" />
+				<property name="objectMapper" ref="mahjongObjectMapper" />
 			</bean>
 		</property>
-		<property name="hashValueSerializer" ref="redisValueSerializer" />
+		<property name="hashValueSerializer">
+			<bean class="cn.mahjong.core.redis.RedisValueSerializer"></bean>
+		</property>
 	</bean>
-	
+
 	<bean id="cacheManager" class="org.springframework.data.redis.cache.RedisCacheManager">
 		<constructor-arg name="template" ref="redisTemplate" />
 	</bean>
-	<bean id="redisValueSerializer" class="cn.mahjong.core.redis.RedisValueSerializer" ></bean>
+
+	<bean id="mahjongPropertyFilter" class="cn.mahjong.core.redis.MahjongPropertyFilter">
+		<property name="filterProperty">
+			<set>
+				<value>roleSet</value>
+				<value>updateUser</value>
+				<value>createUser</value>
+			</set>
+		</property>
+	</bean>
+	<bean id="mahjongObjectMapper" class="cn.mahjong.core.redis.MahjongObjectMapper">
+		<property name="propertyFilter" ref="mahjongPropertyFilter"></property>
+	</bean>
+
 </beans>

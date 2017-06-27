@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import cn.mahjong.core.security.SecurityHelp;
 import cn.mahjong.core.sys.role.RoleService;
-import cn.mahjong.core.sys.user.UserService;
+import cn.mahjong.core.sys.user.AdminUserService;
 import cn.mahjong.dto.RestResp;
 import cn.mahjong.model.base.impl.BaseObjectImpl;
 import cn.mahjong.model.sys.role.impl.RoleImpl;
-import cn.mahjong.model.sys.user.User;
-import cn.mahjong.model.sys.user.impl.UserImpl;
+import cn.mahjong.model.sys.user.AdminUser;
+import cn.mahjong.model.sys.user.impl.AdminUserImpl;
 import cn.mahjong.utils.search.PageData;
 import cn.mahjong.utils.search.PageQuery;
 import cn.mahjong.web.base.controller.BaseController;
@@ -34,7 +34,7 @@ import cn.mahjong.web.sys.user.UserDto;
 public class UserController extends BaseController {
 
 	@Autowired
-	private UserService userService;
+	private AdminUserService adminUserService;
 	@Autowired
 	private RoleService roleService;
 	
@@ -52,31 +52,31 @@ public class UserController extends BaseController {
 		PageQuery pageQuery = new PageQuery(getBaseObjectClass());
 		BindingUtil.bindPageProperty(pageQuery, request);
 		BindingUtil.bindSearchProperty(pageQuery, request);
-		List<User> list = (List<User>) userService.find(pageQuery);
-		return new PageData(pageQuery.getTotal(), BindingUtil.convertToDtoList(list, User.class, UserDto.class));
+		List<AdminUser> list = (List<AdminUser>) adminUserService.find(pageQuery);
+		return new PageData(pageQuery.getTotal(), BindingUtil.convertToDtoList(list, AdminUser.class, UserDto.class));
 	}
 	
 	@Override
 	public Class<? extends BaseObjectImpl> getBaseObjectClass() {
-		return UserImpl.class;
+		return AdminUserImpl.class;
 	}
 	
 	@RequestMapping(value = "/Create",method = RequestMethod.POST)
 	@ResponseBody
 	protected RestResp create(HttpServletRequest request, HttpServletResponse response, Model model) {
 		RestResp resp = new RestResp("0","ok",null);
-		User user = new UserImpl();
+		AdminUser user = new AdminUserImpl();
 		BindingUtil.bindObject(user, request, null);
 		if (StringUtils.isNotEmpty(user.getPassword()) && user.getPassword().length() > 5) {
 			Md5PasswordEncoder encoder = new Md5PasswordEncoder();
 			user.setPassword(encoder.encodePassword(user.getPassword(), user.getUsername()));
 			Date now = new Date();
-			User user1 = SecurityHelp.getCurrentUser();
+			AdminUser user1 = SecurityHelp.getCurrentUser();
 			user.setCreateDate(now);
 			user.setUpdateDate(now);
 			user.setCreateUser(user1);
 			user.setUpdateUser(user1);
-			userService.save(user);
+			adminUserService.save(user);
 		}else{
 			resp.setCode("1");
 			resp.setMsg("密码至少6位，请重新输入。");
@@ -90,7 +90,7 @@ public class UserController extends BaseController {
 	protected RestResp update(HttpServletRequest request, HttpServletResponse response, Model model) {
 		RestResp resp = new RestResp("0","ok",null);
 		String password = request.getParameter("password");
-		User user = (User) userService.getObject(getBaseObjectClass(), Long.parseLong(request.getParameter("id")));
+		AdminUser user = (AdminUser) adminUserService.getObject(getBaseObjectClass(), Long.parseLong(request.getParameter("id")));
 		BindingUtil.bindObject(user, request, null);
 		if (StringUtils.isNotBlank(password)) {
 			if (password.length() <6) {
@@ -104,7 +104,7 @@ public class UserController extends BaseController {
 		Date now = new Date();
 		user.setUpdateDate(now);
 		user.setUpdateUser(SecurityHelp.getCurrentUser());
-		userService.update(user);
+		adminUserService.update(user);
 		return resp;
 	}
 	
@@ -112,7 +112,7 @@ public class UserController extends BaseController {
 	@ResponseBody
 	protected RestResp checkUserName(HttpServletRequest request, HttpServletResponse response, Model model,String username) {
 		RestResp resp = new RestResp("0","ok",null);
-		User user = userService.loadByUserName(username);
+		AdminUser user = adminUserService.loadByUserName(username);
 		if (user != null) {
 			resp.setCode("1");
 			resp.setMsg("用户名已存在");

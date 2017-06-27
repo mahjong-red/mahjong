@@ -7,7 +7,7 @@ import cn.mahjong.enums.persist.UserStatus;
 import cn.mahjong.model.base.Bmo;
 import cn.mahjong.model.sys.role.Role;
 
-public interface User extends Bmo{
+public interface AdminUser extends Bmo{
 
 	public String getUsername();
 

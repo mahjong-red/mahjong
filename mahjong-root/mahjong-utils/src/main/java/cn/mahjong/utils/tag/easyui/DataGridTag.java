@@ -511,7 +511,6 @@ public class DataGridTag extends TagSupport {
 		this.getField(sb);
 		sb.append("]],");
 		sb.append("onLoadError:function(XMLHttpRequest, textStatus, errorThrown){var data = eval('('+XMLHttpRequest.responseText+')');if(data.code !='0'){$.messager.alert('提示','加载远程数据失败！<br />'+data.msg,'error');}},");
-		sb.append("loadFilter:function(data){alert(data)},");
 		sb.append("onLoadSuccess:function(data){$(\"#"+name+"\")."+grid+"(\"clearSelections\");");
 		if(openFirstNode&&treegrid){
 			sb.append(" if(data==null){");

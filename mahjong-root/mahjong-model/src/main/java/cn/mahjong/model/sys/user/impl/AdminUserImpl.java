@@ -31,14 +31,14 @@ import cn.mahjong.enums.persist.UserStatus;
 import cn.mahjong.model.base.impl.BmoImpl;
 import cn.mahjong.model.sys.role.Role;
 import cn.mahjong.model.sys.role.impl.RoleImpl;
-import cn.mahjong.model.sys.user.User;
+import cn.mahjong.model.sys.user.AdminUser;
 
 @Entity
 @Table(name = "sys_user")
-@Proxy(lazy = true, proxyClass = User.class)
+@Proxy(lazy = true, proxyClass = AdminUser.class)
 @Where(clause = " is_delete=0 ")
 @SQLDelete(sql=" UPDATE sys_user SET is_delete = 1 WHERE id = ? " ,check=ResultCheckStyle.COUNT)
-public class UserImpl extends BmoImpl implements User,UserDetails {
+public class AdminUserImpl extends BmoImpl implements AdminUser,UserDetails {
 
 	private static final long serialVersionUID = -2797367290465806561L;
 

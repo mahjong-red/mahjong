@@ -16,7 +16,7 @@ import cn.mahjong.core.security.SecurityHelp;
 import cn.mahjong.core.sys.resource.ResourceService;
 import cn.mahjong.model.sys.resource.Resource;
 import cn.mahjong.model.sys.role.Role;
-import cn.mahjong.model.sys.user.User;
+import cn.mahjong.model.sys.user.AdminUser;
 
 @Controller
 @RequestMapping()
@@ -33,7 +33,7 @@ public class IndexController {
 		return "main";
 	}
 	
-	private void filterByUser(List<Resource> list,User user){
+	private void filterByUser(List<Resource> list,AdminUser user){
 		Iterator<Resource> it = list.iterator();
 		while (it.hasNext()) {
 			Resource item = it.next();

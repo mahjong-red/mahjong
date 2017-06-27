@@ -1,33 +1,35 @@
 package cn.mahjong.core.sys.user.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import cn.mahjong.core.base.impl.BaseServiceImpl;
-import cn.mahjong.core.sys.user.UserService;
-import cn.mahjong.model.sys.user.User;
-import cn.mahjong.persist.sys.user.UserDao;
+import cn.mahjong.core.sys.user.AdminUserService;
+import cn.mahjong.model.sys.user.AdminUser;
+import cn.mahjong.persist.sys.user.AdminUserDao;
 
-@Service("userService")
-public class UserServiceImpl extends BaseServiceImpl implements UserService ,UserDetailsService{
+@Service("adminUserService")
+public class AdminUserServiceImpl extends BaseServiceImpl implements AdminUserService ,UserDetailsService{
 
 	@Autowired
-	private UserDao userDao;
+	private AdminUserDao adminUserDao;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = loadByUserName(username);
+		AdminUser user = loadByUserName(username);
 		if (user == null) {
 			throw new UsernameNotFoundException(messages.getMessage("UsernameNotFound", "用户不存在"));
 		}
 		return (UserDetails) user;
 	}
 
+	@Cacheable(value = {"abc"})
 	@Override
-	public User loadByUserName(String username) {
-		return userDao.loadByUsername(username);
+	public AdminUser loadByUserName(String username) {
+		return adminUserDao.loadByUsername(username);
 	}
 }
