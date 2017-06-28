@@ -23,37 +23,37 @@
 		<table cellpadding="5">
 			<tr>
 				<td width="30%">用户名: </td>
-				<td><input class="easyui-textbox" type="text" name="username" autocomplete="off"
+				<td><input class="easyui-textbox" type="text" name="username" autocomplete="off" style="width:180px"
 					data-options="required:true,validType:'length[2,20]',invalidMessage:'用户名长度为2~20.'"></input>
 					<input type="hidden" name="id" />
 				</td>
 			</tr>
 			<tr>
 				<td>昵称:</td>
-				<td><input class="easyui-textbox" type="text" name="nickname" autocomplete="off"
-					data-options="required:true,validType:'length[2,10]',invalidMessage:'昵称长度为2~10.'"></input></td>
+				<td><input class="easyui-textbox" type="text" name="nickname" autocomplete="off" style="width:180px"
+					data-options="required:true,validType:'length[2,10]',width:100,invalidMessage:'昵称长度为2~10.'"></input></td>
 			</tr>
 			<tr>
 				<td>密码:</td>
-				<td><input class="easyui-textbox" type="password" id="UserCreateFormPassword" name="password" autocomplete="off"
+				<td><input class="easyui-textbox" type="password" id="UserCreateFormPassword" name="password" autocomplete="off" style="width:180px"
 					data-options="required:true,validType:'length[6,20]'"></input></td>
 			</tr>
 			<tr>
 				<td>性别:</td>
-				<td><t:enumSelectTag id="UserCreateFormSex" name="sex" enumClass="cn.mahjong.enums.persist.Sex" 
+				<td><t:enumSelectTag id="UserCreateFormSex" name="sex" enumClass="cn.mahjong.enums.persist.Sex" style="'width:180px'"
 					css="easyui-combobox" dataOptions="panelHeight:'auto',required:true,invalidMessage:'请选择性别',editable:false,validType:'comboxValidate(UserCreateFormSex)'" ></t:enumSelectTag></td>
 			</tr>
 			<tr>
 				<td>状态:</td>
 				<td>
-					<t:enumSelectTag id="UserCreateFormUserStatus" name="userStatus" enumClass="cn.mahjong.enums.persist.UserStatus"
+					<t:enumSelectTag id="UserCreateFormUserStatus" name="userStatus" enumClass="cn.mahjong.enums.persist.UserStatus" style="'width:180px'"
 					css="easyui-combobox" defaultVal="1" dataOptions="panelHeight:'auto',required:true,invalidMessage:'请选择状态',editable:false,validType:'comboxValidate(UserCreateFormUserStatus)'" ></t:enumSelectTag>
 				</td>
 			</tr>
 			<tr>
 				<td>权限:</td>
 				<td>
-					<select class="easyui-combobox" id="UserCreateFormRoleSet" name="roleSet" data-options="multiple:true,panelHeight:'auto'" >
+					<select class="easyui-combobox" id="UserCreateFormRoleSet" name="roleSet" style="width:180px" data-options="multiple:true,panelHeight:'auto'" >
 						<c:forEach items="${roleList }" var="item">
 							<option value="${item.id }">${item.name }</option>
 						</c:forEach>
@@ -68,7 +68,8 @@
 	    $(this).find("td:first").attr('align','right');
 	})
 	UserCreateFormSave = function(){
-		$('#UserCreateForm').form('submit',{
+		alert($('#dd').daterangebox('getValue'));
+		/* $('#UserCreateForm').form('submit',{
 			onSubmit:function(){
 				return $(this).form('enableValidation').form('validate');
 			},
@@ -82,7 +83,7 @@
 					$.messager.alert('提示','操作失败！<br />'+data.msg,'error');
 				}
 		    }
-		});
+		}); */
 	}
 	userlistCreate = function(url){
 		$("#UserCreateForm").form({"url":url});

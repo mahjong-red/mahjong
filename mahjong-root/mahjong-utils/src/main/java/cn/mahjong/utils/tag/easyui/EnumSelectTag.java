@@ -23,7 +23,8 @@ public class EnumSelectTag extends TagSupport {
 	private String defaultVal;
 	private String css;
 	private String dataOptions;//当css为jquery组件
-
+	private String style;
+	
 	public int doStartTag() throws JspTagException {
 		return EVAL_PAGE;
 	}
@@ -45,6 +46,8 @@ public class EnumSelectTag extends TagSupport {
 		sb.append(name);
 		sb.append(" class=");
 		sb.append(css);
+		sb.append(" style=");
+		sb.append(style);
 		sb.append(" data-options=\"");
 		sb.append(dataOptions);
 		sb.append("\">");
@@ -119,6 +122,14 @@ public class EnumSelectTag extends TagSupport {
 
 	public void setDataOptions(String dataOptions) {
 		this.dataOptions = dataOptions;
+	}
+
+	public String getStyle() {
+		return style;
+	}
+
+	public void setStyle(String style) {
+		this.style = style;
 	}
 	
 }

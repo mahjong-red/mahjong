@@ -51,6 +51,11 @@ public class EasyuiTag extends TagSupport {
 			sb.append("<script type=\"text/javascript\" src=\"");
 			sb.append(request.getContextPath());
 			sb.append("/static/js/jquery-easyui-1.5.2/validatebox.js\"></script>");
+			
+			sb.append("<script type=\"text/javascript\" src=\"");
+			sb.append(request.getContextPath());
+			sb.append("/static/js/jquery-easyui-1.5.2/jquery.daterangebox.js\"></script>");
+
 			out.print(sb.toString());
 		} catch (IOException e) {
 			e.printStackTrace();
