@@ -7,6 +7,7 @@
 	<short-name>t</short-name>
 	<uri>/easyui-tags</uri>
 	<display-name>"自定义标签"</display-name>
+	<!-- 数据列表 -->
 	<tag>
 		<name>datagrid</name>
 		<tag-class>cn.mahjong.utils.tag.easyui.DataGridTag</tag-class>
@@ -152,6 +153,7 @@
 				添加规则和easyui的field一致</description>
 		</attribute>
 	</tag>
+	<!-- 数据表格-列 -->
 	<tag>
 		<name>dgCol</name>
 		<tag-class>cn.mahjong.utils.tag.easyui.DataGridColumnTag</tag-class>
@@ -291,6 +293,7 @@
 				添加规则和easyui的field一致</description>
 		</attribute>
 	</tag>
+	<!-- 数据表格-列表删除 -->
 	<tag>
 		<name>dgDelOpt</name>
 		<tag-class>cn.mahjong.utils.tag.easyui.DataGridDelOptTag</tag-class>
@@ -330,6 +333,7 @@
 			<description>按钮操作Code</description>
 		</attribute>
 	</tag>
+	<!-- 数据表格-列表URL操作 -->
 	<tag>
 		<name>dgDefOpt</name>
 		<tag-class>cn.mahjong.utils.tag.easyui.DataGridDefOptTag</tag-class>
@@ -359,6 +363,7 @@
 			<description>按钮操作Code</description>
 		</attribute>
 	</tag>
+	<!-- 弹出窗模式操作 -->
 	<tag>
 		<name>dgOpenOpt</name>
 		<tag-class>cn.mahjong.utils.tag.easyui.DataGridOpenOptTag</tag-class>
@@ -403,6 +408,7 @@
 			<description>弹出方式[OpenWin/OpenTab]</description>
 		</attribute>
 	</tag>
+	<!-- 数据表格-列表自定义函数操作 -->
 	<tag>
 		<name>dgFunOpt</name>
 		<tag-class>cn.mahjong.utils.tag.easyui.DataGridFunOptTag</tag-class>
@@ -432,6 +438,7 @@
 			<description>按钮操作Code</description>
 		</attribute>
 	</tag>
+	<!-- 数据表格-工具条 -->
 	<tag>
 		<name>dgToolBar</name>
 		<tag-class>cn.mahjong.utils.tag.easyui.DataGridToolBarTag</tag-class>
@@ -479,6 +486,7 @@
 			<description>按钮操作Code</description>
 		</attribute>
 	</tag>
+	<!-- 数据表格-列表询问操作 -->
 	<tag>
 		<name>dgConfOpt</name>
 		<tag-class>cn.mahjong.utils.tag.easyui.DataGridConfOptTag</tag-class>
@@ -514,6 +522,7 @@
 			<description>按钮操作Code</description>
 		</attribute>
 	</tag>
+	<!-- 下拉列表框 -->
 	<tag>
 		<name>comboBox</name>
 		<tag-class>cn.mahjong.utils.tag.easyui.ComboBoxTag</tag-class>
@@ -559,6 +568,7 @@
 			<description>listHeight对应字段</description>
 		</attribute>
 	</tag>
+	<!-- 树形选择框 -->
 	<tag>
 		<name>comboTree</name>
 		<tag-class>cn.mahjong.utils.tag.easyui.ComboTreeTag</tag-class>
@@ -598,6 +608,7 @@
 			<description>是否多选</description>
 		</attribute>
 	</tag>
+	<!-- tabs标签 -->
 	<tag>
 		<name>tabs</name>
 		<tag-class>cn.mahjong.utils.tag.easyui.TabsTag</tag-class>
@@ -665,6 +676,7 @@
 			<description>选项卡位置(top,left,right,bottom)</description>
 		</attribute>
 	</tag>
+	<!-- tab标签 -->
 	<tag>
 		<name>tab</name>
 		<tag-class>cn.mahjong.utils.tag.easyui.TabTag</tag-class>
@@ -713,6 +725,7 @@
 			<description>选项卡是否带关闭按钮</description>
 		</attribute>
 	</tag>
+	<!-- 上传标签 -->
 	<tag>
 		<name>upload</name>
 		<tag-class>cn.mahjong.utils.tag.easyui.UploadTag</tag-class>
@@ -1238,6 +1251,7 @@
 			<description>按钮容器的ID</description>
 		</attribute>
 	</tag>
+	<!-- 枚举选择 -->
 	<tag>
 		<name>enumSelectTag</name>
 		<tag-class>cn.mahjong.utils.tag.easyui.EnumSelectTag</tag-class>
@@ -1269,6 +1283,12 @@
 			<name>dataOptions</name>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
-	
+	</tag>
+	<!-- 引入jquery easyui 依赖的js，css -->
+	<tag>
+		<name>easyui</name>
+		<tag-class>cn.mahjong.utils.tag.easyui.tags.EasyuiTag</tag-class>
+		<body-content>jsp</body-content>
+		<description>引入jquery easyui 依赖的js，css</description>
 	</tag>
 </taglib>

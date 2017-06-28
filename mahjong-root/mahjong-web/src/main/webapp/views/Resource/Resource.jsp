@@ -2,7 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="t" uri="/easyui-tags"%>
-
+<t:easyui></t:easyui>
 <div id="resourceLayout" class="easyui-layout" data-options="fit:true">
 	<div data-options="region:'west',split:true" style="width:200px;padding:10px;">
 		<ul class="easyui-tree" id="resourceTree" data-options="onContextMenu:resourceTreeContextMenu,url:'<c:url value="/Resource/LoadTree" />',onClick:resourceTreeClick" ></ul>

@@ -10,11 +10,11 @@ public class FormTag extends TagSupport {
 
 	private static final long serialVersionUID = 3261365960968253370L;
 	
-	private String name;
+	/*private String name;
 	
 	private String action;
 	
-	private String method;
+	private String method;*/
 	
 	
 }

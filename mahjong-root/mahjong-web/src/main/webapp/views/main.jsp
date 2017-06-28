@@ -47,7 +47,7 @@
 						<c:forEach items="${item.children }" var="childrenItem">
 							<li iconCls="${childrenItem.iconCls }"><a
 								href="javascript:void(0)" data-icon="${childrenItem.iconCls }"
-								data-link="${ctx }${childrenItem.url }" iframe="0">${childrenItem.name }</a></li>
+								data-link="${ctx }${childrenItem.url }" iframe="1">${childrenItem.name }</a></li>
 
 						</c:forEach>
 					</ul>

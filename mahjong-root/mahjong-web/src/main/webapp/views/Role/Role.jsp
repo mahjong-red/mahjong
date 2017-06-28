@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="t" uri="/easyui-tags"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
+<t:easyui></t:easyui>
 <t:datagrid name="rolelist" checkbox="true" actionUrl="Role/Find"
 	fit="true" fitColumns="false" idField="id" queryMode="group">
 	<t:dgCol title="编号" field="id" hidden="false"></t:dgCol>
