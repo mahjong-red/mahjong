@@ -32,7 +32,7 @@ protected final Log logger = LogFactory.getLog(getClass());
 	private String redirectUrl;
 	
 	// 需要移除的cookie
-	private String[] removeCookies;
+	//private String[] removeCookies;
     
 	/**
 	 * @see org.springframework.security.web.session.InvalidSessionStrategy#onInvalidSessionDetected(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
@@ -47,19 +47,19 @@ protected final Log logger = LogFactory.getLog(getClass());
 		String header = request.getHeader("accept");
 		
 		// 删除cookie
-        for (String c : removeCookies) {
-        	
-        	Cookie cookie = new Cookie(c, null);
-            cookie.setMaxAge(0);
-            response.addCookie(cookie);
-		}
+//        for (String c : removeCookies) {
+//        	
+//        	Cookie cookie = new Cookie(c, null);
+//            cookie.setMaxAge(0);
+//            response.addCookie(cookie);
+//		}
 		
 		// 重新创建session
         request.getSession();
         
         if (StringUtils.contains(header, RESPONSE_TYPE_JSON)){
 			// AJAX请求时，发现session失效，给于失效的响应信息
-			RestResp obj = new RestResp("101", "Invalid Session", null);
+			RestResp obj = new RestResp("101", "登录状态已失效，请重新登录！", null);
 			
 			response.getWriter().print(JSONObject.toJSONString(obj));
 			return;
@@ -81,20 +81,6 @@ protected final Log logger = LogFactory.getLog(getClass());
 	 */
 	public void setRedirectUrl(String redirectUrl) {
 		this.redirectUrl = redirectUrl;
-	}
-
-	/**
-	 * @return the removeCookies
-	 */
-	public String[] getRemoveCookies() {
-		return removeCookies;
-	}
-
-	/**
-	 * @param removeCookies the removeCookies to set
-	 */
-	public void setRemoveCookies(String[] removeCookies) {
-		this.removeCookies = removeCookies;
 	}
 
 }

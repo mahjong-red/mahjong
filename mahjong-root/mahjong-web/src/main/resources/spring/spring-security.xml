@@ -61,12 +61,7 @@
     <bean id="httpSessionSecurityContextRepository" class="org.springframework.security.web.context.HttpSessionSecurityContextRepository"></bean>
     
     <bean id="mahjongInvalidSessionHandler" class="cn.mahjong.core.security.MahjongInvalidSessionHandler">
-		<property name="redirectUrl" value="/views/login.jsp"></property>
-		<property name="removeCookies">
-			<array>
-				<value>openMenu</value>
-			</array>
-		</property>
+		<property name="redirectUrl" value="/views/InvalidSession.jsp"></property>
 	</bean>
 	
     <bean id="mahjongSecurityFilter" class="cn.mahjong.core.security.MahjongSecurityFilter">

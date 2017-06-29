@@ -32,15 +32,10 @@ public class RoleController extends BaseController {
 	@Autowired
 	private MahjongSecurityMetadata mahjongSecurityMetadata;
 	
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/Find")
 	@ResponseBody
 	protected PageData find(HttpServletRequest request, HttpServletResponse response, Model model) {
-		PageQuery pageQuery = new PageQuery(getBaseObjectClass());
-		BindingUtil.bindPageProperty(pageQuery, request);
-		BindingUtil.bindSearchProperty(pageQuery, request);
-		List<Role> list = (List<Role>) roleService.find(pageQuery);
-		return new PageData(pageQuery.getTotal(), BindingUtil.convertToDtoList(list, Role.class, RoleDto.class));
+		return super.find(request, response, RoleDto.class);
 	}
 
 	@RequestMapping(value = "/InitRole")
