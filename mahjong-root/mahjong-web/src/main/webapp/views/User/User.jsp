@@ -68,8 +68,7 @@
 	    $(this).find("td:first").attr('align','right');
 	})
 	UserCreateFormSave = function(){
-		alert($('#dd').daterangebox('getValue'));
-		/* $('#UserCreateForm').form('submit',{
+		$('#UserCreateForm').form('submit',{
 			onSubmit:function(){
 				return $(this).form('enableValidation').form('validate');
 			},
@@ -83,7 +82,7 @@
 					$.messager.alert('提示','操作失败！<br />'+data.msg,'error');
 				}
 		    }
-		}); */
+		});
 	}
 	userlistCreate = function(url){
 		$("#UserCreateForm").form({"url":url});

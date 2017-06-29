@@ -29,9 +29,6 @@ import com.alibaba.fastjson.JSONObject;
  */
 @SuppressWarnings({"serial", "rawtypes", "unchecked", "static-access"})
 public class DataGridTag extends TagSupport {
-	protected String fields = "";// 显示字段
-	protected String searchFields = "";// 查询字段 Author:qiulu Date:20130618
-										// for：添加对区间查询的支持
 	protected String name;// 表格标示
 	protected String title;// 表格标示
 	protected String idField = "id";// 主键字段
@@ -253,14 +250,6 @@ public class DataGridTag extends TagSupport {
 		dataGridColumn.setAutocomplete(isAuto);
 		dataGridColumn.setExtendParams(extendParams);
 		columnList.add(dataGridColumn);
-		if (field != "opt") {
-			fields += field + ",";
-			if ("group".equals(queryMode)) {
-				searchFields += field + "," + field + "_begin," + field + "_end,";
-			} else {
-				searchFields += field + ",";
-			}
-		}
 		if (replace != null) {
 			String[] test = replace.split(",");
 			String text = "";
@@ -356,8 +345,6 @@ public class DataGridTag extends TagSupport {
 		columnValueList.clear();
 		columnStyleList.clear();
 		columnList.clear();
-		fields = "";
-		searchFields = "";
 		return EVAL_PAGE;
 	}
 
@@ -561,12 +548,12 @@ public class DataGridTag extends TagSupport {
 			sb.append("function " + name + "search(){");
 			sb.append("var queryParams=$(\'#" + name + "\').datagrid('options').queryParams;");
 			sb.append("$(\'#" + name + "tb\').find('*').each(function(){queryParams[$(this).attr('name')]=$(this).val();});");
-			sb.append("$(\'#" + name + "\')." + grid + "({url:'" + actionUrl + "?field=" + searchFields + "',pageNumber:1});" + "}");
+			sb.append("$(\'#" + name + "\')." + grid + "({url:'" + actionUrl + "',pageNumber:1});" + "}");
 			
 			//高级查询执行方法
 			sb.append("function dosearch(params){");
 			sb.append("var jsonparams=$.parseJSON(params);");
-			sb.append("$(\'#" + name + "\')." + grid + "({url:'" + actionUrl + "?field=" + searchFields + "',queryParams:jsonparams});" + "}");
+			sb.append("$(\'#" + name + "\')." + grid + "({url:'" + actionUrl + "',queryParams:jsonparams});" + "}");
 			
 			 //searchbox框执行方法
 			  searchboxFun(sb,grid);
