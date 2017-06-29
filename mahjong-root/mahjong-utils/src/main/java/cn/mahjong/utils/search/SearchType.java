@@ -40,6 +40,11 @@ public enum SearchType {
 	/**
 	 * 或者
 	 */
-	OR
+	OR,
+	
+	/**
+	 * LIKE
+	 */
+	LIKE
 
 }

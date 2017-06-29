@@ -29,6 +29,16 @@ import com.alibaba.fastjson.JSONObject;
  */
 @SuppressWarnings({"serial", "rawtypes", "unchecked", "static-access"})
 public class DataGridTag extends TagSupport {
+	
+	/**
+	 * 查询属性前缀
+	 */
+	public final static String SEARCH_PREFIX = "__search__";
+	/**
+	 * 模糊查询前缀
+	 */
+	public final static String LIKE_PREFIX = "__like__";
+	
 	protected String name;// 表格标示
 	protected String title;// 表格标示
 	protected String idField = "id";// 主键字段
@@ -585,7 +595,7 @@ public class DataGridTag extends TagSupport {
 						sb.append("<span style=\"vertical-align:middle;display:-moz-inline-box;display:inline-block;width: 80px;text-align:right;text-overflow:ellipsis;-o-text-overflow:ellipsis; overflow: hidden;white-space:nowrap; \" title=\""+col.getTitle()+"\">"+col.getTitle()+"：</span>");
 						if("single".equals(col.getQueryMode())){
 							if(!StringUtils.isEmpty(col.getReplace())){
-								sb.append("<select name=\""+col.getField().replaceAll("_","\\.")+"\" WIDTH=\"100\" style=\"width: 104px\"> ");
+								sb.append("<select name=\"" + SEARCH_PREFIX +col.getField().replaceAll("_","\\.")+"\" WIDTH=\"100\" style=\"width: 104px\"> ");
 								sb.append("<option value =\"\" >---请选择---</option>");
 								String[] test = col.getReplace().split(",");
 								String text = "";
@@ -627,7 +637,7 @@ public class DataGridTag extends TagSupport {
 							}else if(col.isAutocomplete()){
 								sb.append(getAutoSpan(col.getField().replaceAll("_","\\."),extendAttribute(col.getExtend())));
 							}else{
-								sb.append("<input onkeypress=\"EnterPress(event)\" onkeydown=\"EnterPress()\"  type=\"text\" name=\""+col.getField().replaceAll("_","\\.")+"\"  "+extendAttribute(col.getExtend())+" style=\"width: 100px\" />");
+								sb.append("<input onkeypress=\"EnterPress(event)\" onkeydown=\"EnterPress()\"  type=\"text\" name=\""+ SEARCH_PREFIX + col.getField().replaceAll("_","\\.")+"\"  "+extendAttribute(col.getExtend())+" style=\"width: 100px\" />");
 							}
 						}else if("group".equals(col.getQueryMode())){
 							sb.append("<input type=\"text\" name=\""+col.getField()+"_begin\"  style=\"width: 94px\" "+extendAttribute(col.getExtend())+"/>");

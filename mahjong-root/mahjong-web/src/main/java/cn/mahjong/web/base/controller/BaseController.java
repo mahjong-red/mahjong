@@ -116,6 +116,20 @@ public abstract class BaseController {
 		return new PageData((int)pageQuery.getTotal(), this.baseService.find(pageQuery));
 	}
 	
+	/**
+	 * 为子类提供查询方法（需子类提供dto）
+	 * @param request
+	 * @param response
+	 * @param dtoClass（返回结果）
+	 * @return 
+	 */
+	public PageData find(HttpServletRequest request, HttpServletResponse response,Class<?> dtoClass){
+		PageQuery pageQuery = new PageQuery(getBaseObjectClass());
+		BindingUtil.bindPageProperty(pageQuery, request);
+		BindingUtil.bindSearchProperty(pageQuery, request);
+		return BindingUtil.buildPageData(this.baseService.find(pageQuery), getBaseObjectClass(), dtoClass, pageQuery);
+	}
+	
 	public BaseController(){
 		setBaseObjectClass(getBaseObjectClass());
 	}

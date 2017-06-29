@@ -25,7 +25,7 @@ public class DataGridColumnTag extends TagSupport {
 	protected String treefield;
 	protected boolean image;
 	protected boolean query=false;
-	private String queryMode = "single";//字段查询模式：single单字段查询；scope范围查询
+	private String queryMode = "single";//字段查询模式：single单字段查询；scope范围查询,like模糊查询
 	
 	//protected boolean autoLoadData = true; // 列表是否自动加载数据
 	private boolean frozenColumn=false; // 是否是冰冻列    默认不是

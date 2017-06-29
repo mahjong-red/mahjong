@@ -5,11 +5,11 @@ import org.springframework.util.CollectionUtils;
 import cn.mahjong.model.sys.role.Role;
 import cn.mahjong.model.sys.user.AdminUser;
 
-public class UserDto {
+public class AdminUserDto {
 	
 	private AdminUser target;
 	
-	public UserDto(AdminUser user){
+	public AdminUserDto(AdminUser user){
 		target = user;
 	}
 	

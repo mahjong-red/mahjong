@@ -19,6 +19,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.hibernate.annotations.Proxy;
 import org.hibernate.proxy.HibernateProxyHelper;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.PropertyValue;
@@ -26,6 +27,7 @@ import org.springframework.beans.propertyeditors.CustomBooleanEditor;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
@@ -37,15 +39,25 @@ import cn.mahjong.core.base.BaseService;
 import cn.mahjong.model.base.BaseObject;
 import cn.mahjong.model.base.impl.BaseObjectImpl;
 import cn.mahjong.utils.SpringContextUtil;
+import cn.mahjong.utils.search.PageData;
 import cn.mahjong.utils.search.PageQuery;
 import cn.mahjong.utils.search.SearchType;
 
 public class BindingUtil {
-	
+
 	private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-	
+
 	private static SimpleDateFormat dataTimeFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-	
+
+	/**
+	 * 查询属性前缀
+	 */
+	public final static String SEARCH_PREFIX = "__search__";
+	/**
+	 * 模糊查询前缀
+	 */
+	public final static String LIKE_PREFIX = "__like__";
+
 	public static void bindPageProperty(PageQuery pageQuery, HttpServletRequest request) {
 		ServletRequestDataBinder binder = new ServletRequestDataBinder(pageQuery);
 		binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
@@ -62,7 +74,7 @@ public class BindingUtil {
 		Map<String, String[]> paramaterMap = request.getParameterMap();
 
 		for (Entry<String, String[]> entry : paramaterMap.entrySet()) {
-			if (StringUtils.startsWith(entry.getKey(), "__search__")) {
+			if (StringUtils.startsWith(entry.getKey(), SEARCH_PREFIX)) {
 
 				String originalParamaterName = entry.getKey();
 				String paramaterName = null;
@@ -70,22 +82,27 @@ public class BindingUtil {
 				Object value1 = null;
 				Object value2 = null;
 
-				paramaterName = StringUtils.substringAfter(originalParamaterName, "__search__");
+				paramaterName = StringUtils.substringAfter(originalParamaterName, SEARCH_PREFIX);
+
+				if (paramaterName.startsWith(LIKE_PREFIX)) {
+					paramaterName = StringUtils.substringAfter(originalParamaterName, LIKE_PREFIX);
+					searchType = SearchType.LIKE;
+				}
 
 				Field field = ReflectionUtils.findField(pageQuery.getTargetClass(), paramaterName);
 				if (field == null) {
-					throw new RuntimeException("Can not find field[" + originalParamaterName + "] in target class["
-							+ pageQuery.getClass().getName() + "]");
+					throw new RuntimeException("Can not find field[" + originalParamaterName + "] in target class[" + pageQuery.getClass().getName() + "]");
 				}
 
 				Class<?> fieldClass = field.getType();
 				String stringValue = request.getParameter(originalParamaterName);
 
-				if (String.class.equals(fieldClass)) {
+				if (searchType == SearchType.LIKE) {
+					value1 = stringValue;
+				} else if (String.class.equals(fieldClass)) {
 					value1 = stringValue;
 					searchType = SearchType.EQUAL;
-				}
-				else if (Integer.class.equals(fieldClass) || Integer.TYPE.equals(fieldClass)) {
+				} else if (Integer.class.equals(fieldClass) || Integer.TYPE.equals(fieldClass)) {
 					if (stringValue.contains("<>")) {
 						String strStartValue = StringUtils.substringBefore(stringValue, "<>");
 						String strEndValue = StringUtils.substringAfter(stringValue, "<>");
@@ -93,13 +110,11 @@ public class BindingUtil {
 						value1 = StringUtils.isBlank(strStartValue) ? Integer.MIN_VALUE : new Integer(strStartValue);
 						value2 = StringUtils.isBlank(strStartValue) ? Integer.MAX_VALUE : new Integer(strEndValue);
 						searchType = SearchType.RANGE;
-					}
-					else {
+					} else {
 						value1 = new Integer(stringValue);
 						searchType = SearchType.EQUAL;
 					}
-				}
-				else if (Long.class.equals(fieldClass) || Long.TYPE.equals(fieldClass)) {
+				} else if (Long.class.equals(fieldClass) || Long.TYPE.equals(fieldClass)) {
 					if (stringValue.contains("<>")) {
 						String strStartValue = StringUtils.substringBefore(stringValue, "<>");
 						String strEndValue = StringUtils.substringAfter(stringValue, "<>");
@@ -107,13 +122,11 @@ public class BindingUtil {
 						value1 = StringUtils.isBlank(strStartValue) ? Long.MIN_VALUE : new Long(strStartValue);
 						value2 = StringUtils.isBlank(strStartValue) ? Long.MAX_VALUE : new Long(strEndValue);
 						searchType = SearchType.RANGE;
-					}
-					else {
+					} else {
 						value1 = new Long(stringValue);
 						searchType = SearchType.EQUAL;
 					}
-				}
-				else if (Short.class.equals(fieldClass) || Short.TYPE.equals(fieldClass)) {
+				} else if (Short.class.equals(fieldClass) || Short.TYPE.equals(fieldClass)) {
 					if (stringValue.contains("<>")) {
 						String strStartValue = StringUtils.substringBefore(stringValue, "<>");
 						String strEndValue = StringUtils.substringAfter(stringValue, "<>");
@@ -121,13 +134,11 @@ public class BindingUtil {
 						value1 = StringUtils.isBlank(strStartValue) ? Short.MIN_VALUE : new Short(strStartValue);
 						value2 = StringUtils.isBlank(strStartValue) ? Short.MAX_VALUE : new Short(strEndValue);
 						searchType = SearchType.RANGE;
-					}
-					else {
+					} else {
 						value1 = new Short(stringValue);
 						searchType = SearchType.EQUAL;
 					}
-				}
-				else if (Double.class.equals(fieldClass) || Double.TYPE.equals(fieldClass)) {
+				} else if (Double.class.equals(fieldClass) || Double.TYPE.equals(fieldClass)) {
 					if (stringValue.contains("<>")) {
 						String strStartValue = StringUtils.substringBefore(stringValue, "<>");
 						String strEndValue = StringUtils.substringAfter(stringValue, "<>");
@@ -135,13 +146,11 @@ public class BindingUtil {
 						value1 = StringUtils.isBlank(strStartValue) ? Double.MIN_VALUE : new Double(strStartValue);
 						value2 = StringUtils.isBlank(strStartValue) ? Double.MAX_VALUE : new Double(strEndValue);
 						searchType = SearchType.RANGE;
-					}
-					else {
+					} else {
 						value1 = new Double(stringValue);
 						searchType = SearchType.EQUAL;
 					}
-				}
-				else if (Float.class.equals(fieldClass) || Float.TYPE.equals(fieldClass)) {
+				} else if (Float.class.equals(fieldClass) || Float.TYPE.equals(fieldClass)) {
 					if (stringValue.contains("<>")) {
 						String strStartValue = StringUtils.substringBefore(stringValue, "<>");
 						String strEndValue = StringUtils.substringAfter(stringValue, "<>");
@@ -149,31 +158,23 @@ public class BindingUtil {
 						value1 = StringUtils.isBlank(strStartValue) ? Float.MIN_VALUE : new Float(strStartValue);
 						value2 = StringUtils.isBlank(strStartValue) ? Float.MAX_VALUE : new Float(strEndValue);
 						searchType = SearchType.RANGE;
-					}
-					else {
+					} else {
 						value1 = new Float(stringValue);
 						searchType = SearchType.EQUAL;
 					}
-				}
-				else if (BigDecimal.class.equals(fieldClass)) {
+				} else if (BigDecimal.class.equals(fieldClass)) {
 					if (stringValue.contains("<>")) {
 						String strStartValue = StringUtils.substringBefore(stringValue, "<>");
 						String strEndValue = StringUtils.substringAfter(stringValue, "<>");
 
-						value1 =
-								StringUtils.isBlank(strStartValue) ? new BigDecimal(Double.MIN_VALUE) : new BigDecimal(
-										strStartValue);
-						value2 =
-								StringUtils.isBlank(strStartValue) ? new BigDecimal(Double.MAX_VALUE) : new BigDecimal(
-										strEndValue);
+						value1 = StringUtils.isBlank(strStartValue) ? new BigDecimal(Double.MIN_VALUE) : new BigDecimal(strStartValue);
+						value2 = StringUtils.isBlank(strStartValue) ? new BigDecimal(Double.MAX_VALUE) : new BigDecimal(strEndValue);
 						searchType = SearchType.RANGE;
-					}
-					else {
+					} else {
 						value1 = new BigDecimal(stringValue);
 						searchType = SearchType.EQUAL;
 					}
-				}
-				else if (Date.class.equals(fieldClass)) {
+				} else if (Date.class.equals(fieldClass)) {
 					SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 					if (stringValue.contains("<>")) {
 						try {
@@ -190,63 +191,59 @@ public class BindingUtil {
 								calender.add(Calendar.DAY_OF_YEAR, 1);
 								value2 = calender.getTime();
 							}
-						}
-						catch (ParseException e) {
+						} catch (ParseException e) {
 							throw new RuntimeException(e);
 						}
 					}
 					searchType = SearchType.RANGE;
-				}
-				else if (Boolean.class.equals(fieldClass)) {
+				} else if (Boolean.class.equals(fieldClass)) {
 					value1 = new Boolean(stringValue);
 					searchType = SearchType.EQUAL;
-				}
-				else if (BaseObject.class.isAssignableFrom(fieldClass)) {
+				} else if (BaseObject.class.isAssignableFrom(fieldClass)) {
 					paramaterName = paramaterName + ".id";
 					value1 = new Long(stringValue);
 					searchType = SearchType.EQUAL;
-				}
-				else {
+				} else {
 					throw new RuntimeException("Can not found paramater [" + originalParamaterName + "]");
 				}
 				pageQuery.addSearchItem(paramaterName, searchType, value1, value2);
 			}
 		}
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	public static void registerEditor(DataBinder dataBinder, String attributeName, MutablePropertyValues values, Object value) {
 		Object object = (BaseObject) dataBinder.getTarget();
 		Field field = ReflectionUtils.findField(object.getClass(), attributeName);
 		if (field == null) {
-			throw new RuntimeException("Field not found:" + attributeName + " in " + object.getClass().getName() );
+			throw new RuntimeException("Field not found:" + attributeName + " in " + object.getClass().getName());
 		}
-		
+
 		Class fieldClass = field.getType();
 		if (String.class.equals(fieldClass)) {
-			dataBinder.registerCustomEditor(String.class, attributeName,  new StringTrimmerEditor(true));
+			dataBinder.registerCustomEditor(String.class, attributeName, new StringTrimmerEditor(true));
 			values.addPropertyValue(attributeName, value);
 		}
-		
+
 	}
-	
+
 	public static void bindObject(BaseObject baseObject, HttpServletRequest request, Validator validator) {
 		MutablePropertyValues mpvs = new MutablePropertyValues();
 		addBindValues(mpvs, request);
 		bindObject(baseObject, mpvs, validator);
 	}
-	
+
 	public static void bindObject(BaseObject baseObject, Map<String, Object> requestParamaterMap, Validator validator) {
 		MutablePropertyValues mpvs = new MutablePropertyValues();
 		addBindValues(mpvs, requestParamaterMap);
 		bindObject(baseObject, mpvs, validator);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static void addBindValues(MutablePropertyValues mpvs, ServletRequest request) {
 		Map<String, Object> parameterMap = request.getParameterMap();
-		
-		for (Entry<String , Object> entry : parameterMap.entrySet()) {
+
+		for (Entry<String, Object> entry : parameterMap.entrySet()) {
 			String key = entry.getKey();
 			String[] values = (String[]) entry.getValue();
 			if (values.length == 1 && StringUtils.isEmpty(values[0])) {
@@ -255,9 +252,9 @@ public class BindingUtil {
 			mpvs.addPropertyValue(key, StringUtils.join(values, ","));
 		}
 	}
-	
+
 	public static void addBindValues(MutablePropertyValues mpvs, Map<String, Object> requestParamaterMap) {
-		for (Entry<String , Object> entry : requestParamaterMap.entrySet()) {
+		for (Entry<String, Object> entry : requestParamaterMap.entrySet()) {
 			String key = entry.getKey();
 			String value = (String) entry.getValue();
 			if (StringUtils.isBlank(value)) {
@@ -266,100 +263,89 @@ public class BindingUtil {
 			mpvs.addPropertyValue(key, value);
 		}
 	}
-	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	public static void bindObject(BaseObject baseObject, MutablePropertyValues mpvs, Validator validator) {
 		List<PropertyValue> propertyValueList = mpvs.getPropertyValueList();
 		DataBinder dataBinder = new DataBinder(baseObject);
-		
+
 		for (PropertyValue property : propertyValueList) {
 			String propertyName = property.getName();
-			
+
 			Class targetObjectClass = HibernateProxyHelper.getClassWithoutInitializingProxy(baseObject);
-			
+
 			Field field = ReflectionUtils.findField(targetObjectClass, property.getName());
-			if (field == null || property.getValue() == null ||property.getValue().toString().equals("")) {
+			if (field == null || property.getValue() == null || property.getValue().toString().equals("")) {
 				continue;
 			}
-			
+
 			Class fieldClass = field.getType();
 			if (String.class.equals(fieldClass)) {
 				dataBinder.registerCustomEditor(String.class, propertyName, new StringTrimmerEditor(true));
-			}
-			else if (Date.class.equals(fieldClass)) {
+			} else if (Date.class.equals(fieldClass)) {
 				String dateStr = (String) property.getValue();
-				
+
 				if (dateStr != null && dateStr.length() > 10) {
 					dataBinder.registerCustomEditor(Date.class, propertyName, new CustomDateEditor(dataTimeFormat, true));
-				}
-				else {
+				} else {
 					dataBinder.registerCustomEditor(Date.class, propertyName, new CustomDateEditor(dateFormat, true));
 				}
-			}
-			else if (Boolean.class.equals(fieldClass) || Boolean.TYPE.equals(fieldClass)) {
+			} else if (Boolean.class.equals(fieldClass) || Boolean.TYPE.equals(fieldClass)) {
 				dataBinder.registerCustomEditor(Boolean.class, propertyName, new CustomBooleanEditor("true", "false", true));
-			}
-			else if (isNumberType(fieldClass)) {
+			} else if (isNumberType(fieldClass)) {
 				if (Integer.TYPE.equals(fieldClass)) {
 					fieldClass = Integer.class;
-				}
-				else if (Long.TYPE.equals(fieldClass)) {
+				} else if (Long.TYPE.equals(fieldClass)) {
 					fieldClass = Long.class;
-				}
-				else if (Double.TYPE.equals(fieldClass)) {
+				} else if (Double.TYPE.equals(fieldClass)) {
 					fieldClass = Double.class;
-				}
-				else if (Short.TYPE.equals(fieldClass)) {
+				} else if (Short.TYPE.equals(fieldClass)) {
 					fieldClass = Short.class;
 				}
 				dataBinder.registerCustomEditor(fieldClass, propertyName, new CustomNumberEditor(fieldClass, true));
-			}else if (Enum.class.isAssignableFrom(fieldClass)) {
+			} else if (Enum.class.isAssignableFrom(fieldClass)) {
 				dataBinder.registerCustomEditor(fieldClass, propertyName, new CustomEnumEditor(fieldClass, true));
-			}
-			else if (BaseObject.class.isAssignableFrom(fieldClass)) {
+			} else if (BaseObject.class.isAssignableFrom(fieldClass)) {
 				if (!fieldClass.isInterface()) {
 					dataBinder.registerCustomEditor(fieldClass, field.getName(), new MahjongBussinessObjectEditor(fieldClass, (BaseService) SpringContextUtil.getBean("baseService")));
-				}
-				else {
+				} else {
 					int i = fieldClass.getName().lastIndexOf(".");
 					String className = fieldClass.getName().substring(0, i) + ".impl" + fieldClass.getName().substring(i) + "Impl";
 					Class<? extends BaseObjectImpl> clazz = null;
 					try {
 						clazz = (Class<? extends BaseObjectImpl>) Class.forName(className);
-					}
-					catch (ClassNotFoundException e) {
+					} catch (ClassNotFoundException e) {
 						new RuntimeException("Class not found:" + className, e);
 					}
 					dataBinder.registerCustomEditor(fieldClass, field.getName(), new MahjongBussinessObjectEditor(clazz, (BaseService) SpringContextUtil.getBean("baseService")));
 				}
-			}
-			else if (Collection.class.isAssignableFrom(fieldClass)) {
+			} else if (Collection.class.isAssignableFrom(fieldClass)) {
 				Type fieldGenericType = field.getGenericType();
 				if (fieldGenericType instanceof ParameterizedType) {
 					ParameterizedType pt = (ParameterizedType) fieldGenericType;
-					Class targetClass = (Class)pt.getActualTypeArguments()[0];
+					Class targetClass = (Class) pt.getActualTypeArguments()[0];
 					if (targetClass.isInterface()) {
 						int i = targetClass.getName().lastIndexOf(".");
 						String className = targetClass.getName().substring(0, i) + ".impl" + targetClass.getName().substring(i) + "Impl";
 						try {
 							targetClass = Class.forName(className);
-						}
-						catch (ClassNotFoundException e) {
+						} catch (ClassNotFoundException e) {
 							new RuntimeException("Class not found:" + className, e);
 						}
 					}
-					dataBinder.registerCustomEditor(fieldClass, field.getName(), new MahjongCollectionStringArrayEditor(fieldClass, targetClass, (BaseService) SpringContextUtil.getBean("baseService")));
+					dataBinder.registerCustomEditor(fieldClass, field.getName(),
+							new MahjongCollectionStringArrayEditor(fieldClass, targetClass, (BaseService) SpringContextUtil.getBean("baseService")));
 				}
 			}
 		}
-		
+
 		dataBinder.bind(mpvs);
-		
+
 		if (validator != null) {
 			dataBinder.addValidators(validator);
 			dataBinder.validate();
 		}
-		
+
 		BindingResult bindingResult = dataBinder.getBindingResult();
 		if (bindingResult.hasErrors()) {
 			String errorMessage = "";
@@ -368,53 +354,64 @@ public class BindingUtil {
 			}
 			throw new RuntimeException(errorMessage);
 		}
-		
+
 	}
-	
+
 	@SuppressWarnings("rawtypes")
 	private static boolean isNumberType(Class fieldClass) {
 		if (BigDecimal.class.equals(fieldClass)) {
 			return true;
-		}
-		else if (Long.class.equals(fieldClass) || Long.TYPE.equals(fieldClass)) {
+		} else if (Long.class.equals(fieldClass) || Long.TYPE.equals(fieldClass)) {
 			return true;
-		}
-		else if (Integer.class.equals(fieldClass) || Integer.TYPE.equals(fieldClass)) {
+		} else if (Integer.class.equals(fieldClass) || Integer.TYPE.equals(fieldClass)) {
 			return true;
-		}
-		else if (Double.class.equals(fieldClass) || Double.TYPE.equals(fieldClass)) {
+		} else if (Double.class.equals(fieldClass) || Double.TYPE.equals(fieldClass)) {
 			return true;
-		}
-		else if (Short.class.equals(fieldClass) || Short.TYPE.equals(fieldClass)) {
+		} else if (Short.class.equals(fieldClass) || Short.TYPE.equals(fieldClass)) {
 			return true;
-		}
-		else {
+		} else {
 			return false;
 		}
 	}
-	
-	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	public static List convertToDtoList(List<?> datas, Class dataClass, Class dtoClass) {
 		List<Object> dtoResult = new ArrayList<Object>();
-		
 		try {
 			for (Object data : datas) {
 				if (dtoClass != null) {
-					Constructor<?> constructor = dtoClass.getConstructor(new Class[] { dataClass });
-					Object dto = constructor.newInstance(new Object[] { data });
+					Constructor<?> constructor = dtoClass.getConstructor(new Class[]{dataClass});
+					Object dto = constructor.newInstance(new Object[]{data});
 					dtoResult.add(dto);
-				}
-				else {
+				} else {
 					dtoResult.add(data);
 				}
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-		
+
 		return dtoResult;
+	}
+	
+	/**
+	 * 转换结果集
+	 * @param datas
+	 * @param dataClass
+	 * @param dtoClass
+	 * @param pageQuery
+	 * @return
+	 */
+	public static PageData buildPageData(List<?> datas, Class<?> dataClass, Class<?> dtoClass, PageQuery pageQuery) {
+		Proxy p[] = dataClass.getAnnotationsByType(Proxy.class);
+		if (p!=null && p.length>0) {
+			dataClass = p[0].proxyClass();
+		}
+		PageData pd = new PageData();
+		pd.setTotal(pageQuery.getTotal());
+		List<?> dtoResult = convertToDtoList(datas, dataClass , dtoClass);
+		pd.setRows(dtoResult);
+		return pd;
 	}
 
 }

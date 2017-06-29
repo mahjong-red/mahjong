@@ -1,7 +1,6 @@
 package cn.mahjong.web.sys.user.controller;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,10 +23,9 @@ import cn.mahjong.model.sys.role.impl.RoleImpl;
 import cn.mahjong.model.sys.user.AdminUser;
 import cn.mahjong.model.sys.user.impl.AdminUserImpl;
 import cn.mahjong.utils.search.PageData;
-import cn.mahjong.utils.search.PageQuery;
 import cn.mahjong.web.base.controller.BaseController;
 import cn.mahjong.web.bind.BindingUtil;
-import cn.mahjong.web.sys.user.UserDto;
+import cn.mahjong.web.sys.user.AdminUserDto;
 
 @Controller
 @RequestMapping("/User")
@@ -45,15 +43,10 @@ public class UserController extends BaseController {
 		return servletPath + servletPath;
 	}
 	
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/Find")
 	@ResponseBody
 	protected PageData find(HttpServletRequest request, HttpServletResponse response, Model model) {
-		PageQuery pageQuery = new PageQuery(getBaseObjectClass());
-		BindingUtil.bindPageProperty(pageQuery, request);
-		BindingUtil.bindSearchProperty(pageQuery, request);
-		List<AdminUser> list = (List<AdminUser>) adminUserService.find(pageQuery);
-		return new PageData(pageQuery.getTotal(), BindingUtil.convertToDtoList(list, AdminUser.class, UserDto.class));
+		return super.find(request, response, AdminUserDto.class);
 	}
 	
 	@Override
