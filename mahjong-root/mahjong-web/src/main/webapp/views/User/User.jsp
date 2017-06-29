@@ -31,7 +31,7 @@
 			<tr>
 				<td>昵称:</td>
 				<td><input class="easyui-textbox" type="text" name="nickname" autocomplete="off" style="width:180px"
-					data-options="required:true,validType:'length[2,10]',width:100,invalidMessage:'昵称长度为2~10.'"></input></td>
+					data-options="required:true,validType:'length[2,10]',invalidMessage:'昵称长度为2~10.'"></input></td>
 			</tr>
 			<tr>
 				<td>密码:</td>
