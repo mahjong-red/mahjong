@@ -96,7 +96,9 @@ public class BindingUtil {
 
 				Class<?> fieldClass = field.getType();
 				String stringValue = request.getParameter(originalParamaterName);
-
+				if (StringUtils.isBlank(stringValue)) {
+					continue;
+				}
 				if (searchType == SearchType.LIKE) {
 					value1 = stringValue;
 				} else if (String.class.equals(fieldClass)) {

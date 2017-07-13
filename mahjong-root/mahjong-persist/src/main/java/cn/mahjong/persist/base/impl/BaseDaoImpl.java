@@ -85,12 +85,8 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao{
 		Set<SearchItem> searchItems = pageQuery.getSearchIteams();
 
 		for (SearchItem searchItem : searchItems) {
-			if (searchItem.getValue1() instanceof String) {
-				criteria.add(Restrictions.ilike(searchItem.getItemName(), ((String) searchItem.getValue1()).trim(), MatchMode.ANYWHERE));
-			} else if (SearchType.RANGE.equals(searchItem.getSearchType())) {
+			if (SearchType.RANGE.equals(searchItem.getSearchType())) {
 				criteria.add(Restrictions.between(searchItem.getItemName(), searchItem.getValue1(), searchItem.getValue2()));
-//				criteria.add(Restrictions.ge(searchItem.getItemName(), searchItem.getValue1()));
-//				criteria.add(Restrictions.lt(searchItem.getItemName(), searchItem.getValue2()));
 			} else if (SearchType.GREATER.equals(searchItem.getSearchType())) {
 				criteria.add(Restrictions.gt(searchItem.getItemName(), searchItem.getValue1()));
 			} else if (SearchType.GREATER_EQUAL.equals(searchItem.getSearchType())) {
@@ -100,7 +96,7 @@ public class BaseDaoImpl extends HibernateDaoSupport implements BaseDao{
 			} else if (SearchType.LESS_EQUAL.equals(searchItem.getSearchType())) {
 				criteria.add(Restrictions.le(searchItem.getItemName(), searchItem.getValue1()));
 			} else if (SearchType.LIKE.equals(searchItem.getSearchType())) {
-				criteria.add(Restrictions.like(searchItem.getItemName(), searchItem.getValue1()));
+				criteria.add(Restrictions.like(searchItem.getItemName(), searchItem.getValue1().toString(), MatchMode.ANYWHERE));
 			} else {
 				criteria.add(Restrictions.eq(searchItem.getItemName(), searchItem.getValue1()));
 			}

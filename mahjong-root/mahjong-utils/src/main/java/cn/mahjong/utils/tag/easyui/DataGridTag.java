@@ -37,7 +37,7 @@ public class DataGridTag extends TagSupport {
 	/**
 	 * 模糊查询前缀
 	 */
-	public final static String LIKE_PREFIX = "__like__";
+	public final static String LIKE_SEARCH_PREFIX = SEARCH_PREFIX + "__like__";
 	
 	protected String name;// 表格标示
 	protected String title;// 表格标示
@@ -606,34 +606,6 @@ public class DataGridTag extends TagSupport {
 									sb.append("<option value =\""+value+"\">"+text+"</option>");
 								}
 								sb.append("</select>");
-							}else if(!StringUtils.isEmpty(col.getDictionary())){
-//								if(col.getDictionary().contains(",")){
-//									String[] dic = col.getDictionary().split(",");
-//									String sql = "select " + dic[1] + " as field," + dic[2]
-//											+ " as text from " + dic[0];
-//									systemService = ApplicationContextUtil.getContext().getBean(
-//											SystemService.class);
-//									List<Map<String, Object>> list = systemService.findForJdbc(sql);
-//									sb.append("<select name=\""+col.getField().replaceAll("_","\\.")+"\" WIDTH=\"100\" style=\"width: 104px\"> ");
-//									sb.append("<option value =\"\" >---请选择---</option>");
-//									for (Map<String, Object> map : list){
-//										sb.append(" <option value=\""+map.get("field")+"\">");
-//										sb.append(map.get("text"));
-//										sb.append(" </option>");
-//									}
-//									sb.append("</select>");
-//								}else{
-//									Map<String, List<TSType>> typedatas = TSTypegroup.allTypes;
-//									List<TSType> types = typedatas.get(col.getDictionary().toLowerCase());
-//									sb.append("<select name=\""+col.getField().replaceAll("_","\\.")+"\" WIDTH=\"100\" style=\"width: 104px\"> ");
-//									sb.append("<option value =\"\" >---请选择---</option>");
-//									for (TSType type : types) {
-//										sb.append(" <option value=\""+type.getTypecode()+"\">");
-//										sb.append(type.getTypename());
-//										sb.append(" </option>");
-//									}
-//									sb.append("</select>");
-//								}
 							}else if(col.isAutocomplete()){
 								sb.append(getAutoSpan(col.getField().replaceAll("_","\\."),extendAttribute(col.getExtend())));
 							}else{
@@ -643,6 +615,8 @@ public class DataGridTag extends TagSupport {
 							sb.append("<input type=\"text\" name=\""+col.getField()+"_begin\"  style=\"width: 94px\" "+extendAttribute(col.getExtend())+"/>");
 							sb.append("<span style=\"display:-moz-inline-box;display:inline-block;width: 8px;text-align:right;\">~</span>");
 							sb.append("<input type=\"text\" name=\""+col.getField()+"_end\"  style=\"width: 94px\" "+extendAttribute(col.getExtend())+"/>");
+						}else if("like".equals(col.getQueryMode())){
+							sb.append("<input onkeypress=\"EnterPress(event)\" onkeydown=\"EnterPress()\"  type=\"text\" name=\""+ LIKE_SEARCH_PREFIX + col.getField().replaceAll("_","\\.")+"\"  "+extendAttribute(col.getExtend())+" style=\"width: 100px\" />");
 						}
 						sb.append("</span>");
 					}

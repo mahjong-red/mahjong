@@ -14,8 +14,8 @@
 	<t:datagrid name="rolelist" checkbox="true" actionUrl="Role/Find"
 		fit="true" fitColumns="false" idField="id" queryMode="group">
 		<t:dgCol title="编号" field="id" hidden="false"></t:dgCol>
-		<t:dgCol title="代码" field="code" query="true" ></t:dgCol>
-		<t:dgCol title="名称" field="name" query="true"></t:dgCol>
+		<t:dgCol title="代码" field="code" query="true"></t:dgCol>
+		<t:dgCol title="名称" field="name" query="true" queryMode="like" ></t:dgCol>
 		<%-- <t:dgCol title="资源" field="resourceSet" hidden="true"></t:dgCol> --%>
 		<t:dgDelOpt title="删除" url="textTemplateController.do?del&id={id}" />
 		<t:dgToolBar title="新增" icon="icon-add" onclick="rolelistCreate('${ctx}/Role/Create')"></t:dgToolBar>
