@@ -53,7 +53,7 @@
 		<servlet.api.version>2.5</servlet.api.version>
 		<jsp.api.version>2.2</jsp.api.version>
 		<jstl.version>1.2</jstl.version>
-		<jackson.version>2.4.4</jackson.version>
+		<jackson.version>2.10.0</jackson.version>
 		<commons.codec.version>1.7</commons.codec.version>
 		<org.json.version>20080701</org.json.version>
 		<org.lazyluke.version>0.2.7</org.lazyluke.version>
