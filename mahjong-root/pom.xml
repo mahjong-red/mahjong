@@ -46,7 +46,7 @@
 		<xbean.version>3.16</xbean.version>
 		<jetty.version>7.6.7.v20120910</jetty.version>
 		<lucene.version>3.6.0</lucene.version>
-		<solr.version>3.6.0</solr.version>
+		<solr.version>8.8.2</solr.version>
 		<spring.batch.version>3.0.5.RELEASE</spring.batch.version>
 		<quartz.version>1.8.6</quartz.version>
 		<fastjson.version>1.2.6</fastjson.version>
