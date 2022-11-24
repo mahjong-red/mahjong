@@ -40,7 +40,7 @@
 		<junit.version>3.8.1</junit.version>
 		<mysql.version>5.1.13</mysql.version>
 		<tiles.version>3.0.5</tiles.version>
-		<hibernate.version>4.2.3.Final</hibernate.version>
+		<hibernate.version>5.3.20.Final</hibernate.version>
 		<json.jackson.version>1.9.9</json.jackson.version>
 		<activemy.version>5.9.0</activemy.version>
 		<xbean.version>3.16</xbean.version>
